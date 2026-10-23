@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'Poppins', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.material-icons {
+  font-family: 'Material Icons';
+  font-weight: normal;
+  font-style: normal;
+  font-size: 24px;
+  display: inline-block;
+  line-height: 1;
+  text-transform: none;
+  letter-spacing: normal;
+  word-wrap: normal;
+  white-space: nowrap;
+  direction: ltr;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'liga';
+}
+
+@keyframes slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slide-in 0.3s ease-out;
+}
+/* ── Texto enriquecido (obligaciones y cláusulas) ──────────────────────────
+   Se usa tanto para mostrar contenido guardado (RichTextContent) como dentro
+   del editor (RichTextEditor). Reemplaza a @tailwindcss/typography: alcanza
+   con estas pocas reglas y evita sumar un plugin al build.
+   Los colores salen de currentColor para que el contenedor decida el tono y
+   el modo oscuro funcione sin reglas duplicadas. */
+.rich-text > :first-child { margin-top: 0; }
+.rich-text > :last-child { margin-bottom: 0; }
+
+.rich-text p { margin: 0 0 0.6em; }
+
+.rich-text strong, .rich-text b { font-weight: 600; }
+.rich-text em, .rich-text i { font-style: italic; }
+.rich-text u { text-decoration: underline; }
+.rich-text s { text-decoration: line-through; }
+
+.rich-text ul, .rich-text ol { margin: 0 0 0.6em; padding-left: 1.4em; }
+.rich-text ul { list-style: disc; }
+.rich-text ol { list-style: decimal; }
+.rich-text li { margin: 0.15em 0; }
+.rich-text li > p { margin: 0; }
+
+.rich-text h1, .rich-text h2, .rich-text h3, .rich-text h4 {
+  font-weight: 600;
+  line-height: 1.25;
+  margin: 0.9em 0 0.4em;
+}
+.rich-text h1 { font-size: 1.3em; }
+.rich-text h2 { font-size: 1.2em; }
+.rich-text h3 { font-size: 1.1em; }
+.rich-text h4 { font-size: 1em; }
+
+.rich-text blockquote {
+  margin: 0 0 0.6em;
+  padding-left: 0.8em;
+  border-left: 3px solid #EDE6DD;
+  color: #929D9F;
+}
+.dark .rich-text blockquote { border-left-color: #E08A5C; color: #EDE6DD; }
+
+.rich-text code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+  padding: 0.1em 0.3em;
+  border-radius: 0.25rem;
+  background-color: rgba(0, 0, 0, 0.06);
+}
+.dark .rich-text code { background-color: rgba(255, 255, 255, 0.1); }
+
+.rich-text pre {
+  margin: 0 0 0.6em;
+  padding: 0.7em;
+  border-radius: 0.375rem;
+  overflow-x: auto;
+  background-color: rgba(0, 0, 0, 0.06);
+}
+.dark .rich-text pre { background-color: rgba(255, 255, 255, 0.08); }
+.rich-text pre code { padding: 0; background: none; }
+
+.rich-text a { color: #AE152D; text-decoration: underline; }
+.dark .rich-text a { color: #E08A5C; }
+
+/* Placeholder del editor: Tiptap expone el texto vía data-placeholder. */
+.rich-text .is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: #929D9F;
+}
