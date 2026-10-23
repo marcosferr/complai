@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Tarea Asignada - UNI Contratos</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background-color: #F8FAFC;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #AE152D 0%, #CC6633 100%);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header-owl {
+            width: 120px;
+            height: auto;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .header p {
+            color: #E2E8F0;
+            margin: 10px 0 0 0;
+            font-size: 16px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #1E293B;
+            margin-bottom: 20px;
+        }
+        .intro {
+            color: #64748B;
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+        .task-card {
+            background-color: #F8FAFC;
+            border-left: 4px solid #AE152D;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        .task-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1E293B;
+            margin: 0 0 15px 0;
+        }
+        .task-description {
+            color: #64748B;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .task-details {
+            background-color: #ffffff;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        .detail-row {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #334155;
+            min-width: 140px;
+        }
+        .detail-value {
+            color: #64748B;
+            flex: 1;
+        }
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .priority-critica {
+            background-color: #EF4444;
+            color: #ffffff;
+        }
+        .priority-alta {
+            background-color: #F59E0B;
+            color: #ffffff;
+        }
+        .priority-media {
+            background-color: #3B82F6;
+            color: #ffffff;
+        }
+        .priority-baja {
+            background-color: #64748B;
+            color: #ffffff;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #AE152D 0%, #CC6633 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .cta-button:hover {
+            background: linear-gradient(135deg, #9D2235 0%, #AE152D 100%);
+        }
+        .footer {
+            background-color: #F8FAFC;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #E2E8F0;
+        }
+        .footer p {
+            color: #64748B;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+        .highlight-box {
+            background-color: #EEF2FF;
+            border-left: 4px solid #AE152D;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .highlight-box p {
+            margin: 0;
+            color: #AE152D;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <img src="cid:owl_reading" alt="UNI Contratos" class="header-owl" />
+            <h1>✉️ Nueva Tarea Asignada</h1>
+            <p>UNI Contratos</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <p class="greeting">Hola {{ usuario_nombre }},</p>
+            
+            <p class="intro">
+                Se te ha asignado una nueva tarea en el sistema de UNI Contratos. 
+                Por favor, revisa los detalles a continuación:
+            </p>
+
+            <!-- Task Card -->
+            <div class="task-card">
+                <h2 class="task-title">{{ tarea.titulo }}</h2>
+                
+                <div style="margin-bottom: 15px;">
+                    <span class="priority-badge priority-{{ tarea.prioridad|lower }}">
+                        Prioridad: {{ tarea.get_prioridad_display }}
+                    </span>
+                </div>
+
+                {% if tarea.descripcion %}
+                <p class="task-description">{{ tarea.descripcion }}</p>
+                {% endif %}
+
+                <div class="task-details">
+                    <div class="detail-row">
+                        <span class="detail-label">📅 Fecha de Vencimiento:</span>
+                        <span class="detail-value">{{ tarea.fecha_vencimiento|date:"d/m/Y" }}</span>
+                    </div>
+                    
+                    <div class="detail-row">
+                        <span class="detail-label">⏰ Días Restantes:</span>
+                        <span class="detail-value" style="color: {% if tarea.dias_restantes <= 2 %}#EF4444{% elif tarea.dias_restantes <= 5 %}#F59E0B{% else %}#10B981{% endif %}; font-weight: 600;">
+                            {{ tarea.dias_restantes }} día{{ tarea.dias_restantes|pluralize }}
+                        </span>
+                    </div>
+
+                    {% if tarea.area %}
+                    <div class="detail-row">
+                        <span class="detail-label">🏢 Área:</span>
+                        <span class="detail-value">{{ tarea.area.nombre }}</span>
+                    </div>
+                    {% endif %}
+
+                    <div class="detail-row">
+                        <span class="detail-label">📊 Etapa:</span>
+                        <span class="detail-value">{{ tarea.get_etapa_actual_display }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">🔄 Estado:</span>
+                        <span class="detail-value">{{ tarea.get_estado_etapa_display }}</span>
+                    </div>
+
+                    {% if tarea.creado_por %}
+                    <div class="detail-row">
+                        <span class="detail-label">👤 Asignado por:</span>
+                        <span class="detail-value">{{ tarea.creado_por.get_full_name }}</span>
+                    </div>
+                    {% endif %}
+
+                    {% if tarea.clausula %}
+                    <div class="detail-row">
+                        <span class="detail-label">📋 Cláusula:</span>
+                        <span class="detail-value">{{ tarea.clausula.titulo }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if tarea.dias_restantes <= 7 %}
+            <div class="highlight-box">
+                <p>⚠️ Esta tarea vence pronto. Te recomendamos comenzar a trabajar en ella lo antes posible.</p>
+            </div>
+            {% endif %}
+
+            <!-- Call to Action -->
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="{{ tarea_url }}" class="cta-button">
+                    Ver Detalles de la Tarea →
+                </a>
+            </div>
+
+            <p style="color: #64748B; font-size: 14px; margin-top: 30px;">
+                <strong>¿Qué sigue?</strong><br>
+                Accede al sistema para revisar los detalles completos, actualizar el estado de la tarea y colaborar con tu equipo.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>UNI Contratos</strong></p>
+            <p>Sistema de Gestión de Cumplimiento Normativo</p>
+            <p style="margin-top: 15px;">
+                Este es un correo automático, por favor no responder.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

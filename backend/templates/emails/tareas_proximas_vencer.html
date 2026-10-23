@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tareas Próximas a Vencer - UNI Contratos</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background-color: #F8FAFC;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #AE152D 0%, #CC6633 100%);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header-owl {
+            width: 120px;
+            height: auto;
+            margin: 0 auto 20px;
+            display: block;
+        }
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .header p {
+            color: #E2E8F0;
+            margin: 10px 0 0 0;
+            font-size: 16px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #1E293B;
+            margin-bottom: 20px;
+        }
+        .intro {
+            color: #64748B;
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+        .task-card {
+            background-color: #F8FAFC;
+            border-left: 4px solid #AE152D;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .task-card.urgent {
+            border-left-color: #EF4444;
+            background-color: #FEF2F2;
+        }
+        .task-card.warning {
+            border-left-color: #F59E0B;
+            background-color: #FFFBEB;
+        }
+        .task-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1E293B;
+            margin: 0 0 10px 0;
+        }
+        .task-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 12px;
+        }
+        .task-meta-item {
+            font-size: 13px;
+            color: #64748B;
+        }
+        .task-meta-item strong {
+            color: #334155;
+        }
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .priority-critica {
+            background-color: #EF4444;
+            color: #ffffff;
+        }
+        .priority-alta {
+            background-color: #F59E0B;
+            color: #ffffff;
+        }
+        .priority-media {
+            background-color: #3B82F6;
+            color: #ffffff;
+        }
+        .priority-baja {
+            background-color: #64748B;
+            color: #ffffff;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            background-color: #E0E7FF;
+            color: #AE152D;
+        }
+        .summary {
+            background-color: #EEF2FF;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        .summary-title {
+            font-size: 14px;
+            color: #64748B;
+            margin: 0 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .summary-count {
+            font-size: 36px;
+            font-weight: 700;
+            color: #AE152D;
+            margin: 0;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #AE152D 0%, #CC6633 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .cta-button:hover {
+            background: linear-gradient(135deg, #9D2235 0%, #AE152D 100%);
+        }
+        .footer {
+            background-color: #F8FAFC;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #E2E8F0;
+        }
+        .footer p {
+            color: #64748B;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+        .divider {
+            height: 1px;
+            background-color: #E2E8F0;
+            margin: 30px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <img src="cid:owl_reading" alt="UNI Contratos" class="header-owl" />
+            <h1>🔔 UNI Contratos</h1>
+            <p>Sistema de Gestión de Cumplimiento</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <p class="greeting">Hola {{ usuario_nombre }},</p>
+            
+            <p class="intro">
+                {% if es_resumen_diario %}
+                Este es tu resumen diario de tareas próximas a vencer. 
+                {% else %}
+                Tienes tareas que requieren tu atención.
+                {% endif %}
+                A continuación encontrarás el detalle de las tareas que vencen en los próximos 7 días:
+            </p>
+
+            <!-- Summary Box -->
+            {% if total_tareas > 0 %}
+            <div class="summary">
+                <p class="summary-title">Total de Tareas Próximas a Vencer</p>
+                <p class="summary-count">{{ total_tareas }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Task Cards -->
+            {% for tarea in tareas %}
+            <div class="task-card {% if tarea.dias_restantes <= 2 %}urgent{% elif tarea.dias_restantes <= 5 %}warning{% endif %}">
+                <h3 class="task-title">{{ tarea.titulo }}</h3>
+                
+                <div style="margin-bottom: 10px;">
+                    <span class="priority-badge priority-{{ tarea.prioridad|lower }}">
+                        {{ tarea.get_prioridad_display }}
+                    </span>
+                    <span class="status-badge">
+                        {{ tarea.get_estado_etapa_display }}
+                    </span>
+                </div>
+
+                <div class="task-meta">
+                    <div class="task-meta-item">
+                        <strong>📅 Fecha de Vencimiento:</strong> {{ tarea.fecha_vencimiento|date:"d/m/Y" }}
+                    </div>
+                    <div class="task-meta-item">
+                        <strong>⏰ Días Restantes:</strong> 
+                        <span style="color: {% if tarea.dias_restantes <= 2 %}#EF4444{% elif tarea.dias_restantes <= 5 %}#F59E0B{% else %}#10B981{% endif %}; font-weight: 600;">
+                            {{ tarea.dias_restantes }} día{{ tarea.dias_restantes|pluralize }}
+                        </span>
+                    </div>
+                    {% if tarea.area %}
+                    <div class="task-meta-item">
+                        <strong>🏢 Área:</strong> {{ tarea.area.nombre }}
+                    </div>
+                    {% endif %}
+                    <div class="task-meta-item">
+                        <strong>📊 Etapa:</strong> {{ tarea.get_etapa_actual_display }}
+                    </div>
+                </div>
+
+                {% if tarea.descripcion %}
+                <p style="margin-top: 15px; color: #64748B; font-size: 14px; line-height: 1.5;">
+                    {{ tarea.descripcion|truncatewords:30 }}
+                </p>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            {% if not tareas %}
+            <div style="text-align: center; padding: 40px 20px; color: #64748B;">
+                <p style="font-size: 16px;">✅ No tienes tareas próximas a vencer en los próximos 7 días.</p>
+                <p style="font-size: 14px;">¡Buen trabajo!</p>
+            </div>
+            {% endif %}
+
+            <!-- Call to Action -->
+            {% if tareas %}
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="{{ app_url }}/tareas" class="cta-button">
+                    Ver Todas las Tareas →
+                </a>
+            </div>
+            {% endif %}
+
+            <div class="divider"></div>
+
+            <p style="color: #64748B; font-size: 14px; margin-top: 20px;">
+                <strong>Nota:</strong> Este correo es generado automáticamente. 
+                {% if es_resumen_diario %}
+                Recibirás este resumen todos los días a las 9:00 AM.
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>UNI Contratos</strong></p>
+            <p>Sistema de Gestión de Cumplimiento Normativo</p>
+            <p style="margin-top: 15px;">
+                Este es un correo automático, por favor no responder.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

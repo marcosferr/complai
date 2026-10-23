@@ -1,0 +1,64 @@
+{
+  "_nota": "Contrato FICTICIO para demostración en la hackatón. No corresponde a ningún contrato real de la UNI.",
+  "clausulas": [
+    {
+      "titulo": "Cláusula 1 - Objeto del contrato",
+      "contenido": "El PROVEEDOR se obliga a prestar a la UNIVERSIDAD NACIONAL DE ITAPÚA (en adelante, la UNI) el servicio de mantenimiento preventivo y correctivo de los equipos de climatización instalados en la Sede Central y en las Facultades, conforme a las Especificaciones Técnicas del llamado.",
+      "tareas_cumplimiento": [
+        { "obligacion": "Presentar el inventario inicial de equipos de climatización relevados por sede", "dias_plazo": 5, "prioridad": "ALTA" }
+      ]
+    },
+    {
+      "titulo": "Cláusula 2 - Plazo de vigencia",
+      "contenido": "El contrato tendrá una vigencia de doce (12) meses contados a partir de la firma del acta de inicio de servicios, pudiendo ampliarse conforme a la normativa de contrataciones públicas vigente.",
+      "tareas_cumplimiento": [
+        { "obligacion": "Firmar el acta de inicio de servicios entre el Administrador del Contrato y el PROVEEDOR", "dias_plazo": 3, "prioridad": "CRITICA" }
+      ]
+    },
+    {
+      "titulo": "Cláusula 3 - Garantía de fiel cumplimiento",
+      "contenido": "Dentro de los diez (10) días calendario siguientes a la firma del contrato, el PROVEEDOR deberá presentar una garantía de fiel cumplimiento equivalente al cinco por ciento (5%) del monto total del contrato, con vigencia hasta treinta (30) días posteriores a la finalización del contrato.",
+      "tareas_cumplimiento": [
+        { "obligacion": "Verificar la presentación de la póliza de garantía de fiel cumplimiento (5%)", "dias_plazo": 10, "prioridad": "CRITICA" },
+        { "obligacion": "Controlar la vigencia de la garantía y solicitar su renovación antes del vencimiento", "dias_plazo": 330, "prioridad": "ALTA" }
+      ]
+    },
+    {
+      "titulo": "Cláusula 4 - Plan de mantenimiento y entregables",
+      "contenido": "El PROVEEDOR realizará mantenimientos preventivos mensuales y presentará, dentro de los cinco (5) días hábiles posteriores a cada visita, un informe técnico firmado por un profesional matriculado, con el detalle de equipos intervenidos, repuestos utilizados y recomendaciones.",
+      "tareas_cumplimiento": [
+        { "obligacion": "Recibir y revisar el informe técnico mensual de mantenimiento preventivo", "dias_plazo": 35, "prioridad": "MEDIA" },
+        { "obligacion": "Verificar en sitio, por muestreo, los equipos declarados como intervenidos", "dias_plazo": 40, "prioridad": "MEDIA" }
+      ]
+    },
+    {
+      "titulo": "Cláusula 5 - Tiempos de respuesta",
+      "contenido": "Ante un pedido de mantenimiento correctivo, el PROVEEDOR deberá presentarse en el lugar dentro de las veinticuatro (24) horas si la falla afecta aulas, laboratorios o salas de servidores, y dentro de las setenta y dos (72) horas en los demás casos.",
+      "tareas_cumplimiento": [
+        { "obligacion": "Registrar y controlar los tiempos de respuesta de cada pedido correctivo frente a lo pactado (24 h / 72 h)", "dias_plazo": 30, "prioridad": "ALTA" }
+      ]
+    },
+    {
+      "titulo": "Cláusula 6 - Forma de pago y documentación",
+      "contenido": "La UNI abonará mensualmente los servicios efectivamente prestados, previa presentación de la factura, el informe técnico aprobado, el certificado de cumplimiento tributario vigente y la constancia de pago del IPS del personal afectado al servicio.",
+      "tareas_cumplimiento": [
+        { "obligacion": "Verificar la documentación de pago: factura, informe aprobado, certificado de cumplimiento tributario y constancia de IPS", "dias_plazo": 32, "prioridad": "MEDIA" },
+        { "obligacion": "Emitir el informe de conformidad del Administrador del Contrato para habilitar el pago", "dias_plazo": 34, "prioridad": "ALTA" }
+      ]
+    },
+    {
+      "titulo": "Cláusula 7 - Multas y penalidades",
+      "contenido": "El atraso en los tiempos de respuesta o en la entrega de informes dará lugar a una multa del cero coma cinco por ciento (0,5%) del monto mensual por cada día de atraso, hasta un máximo del diez por ciento (10%) del monto total del contrato, superado el cual la UNI podrá rescindir el contrato.",
+      "tareas_cumplimiento": [
+        { "obligacion": "Calcular multas por atraso y notificar formalmente al PROVEEDOR cuando corresponda", "dias_plazo": 30, "prioridad": "MEDIA" }
+      ]
+    },
+    {
+      "titulo": "Cláusula 8 - Administrador del contrato",
+      "contenido": "La UNI designa como Administrador del Contrato al responsable de la Dirección de Infraestructura, quien será el encargado de verificar el cumplimiento de las obligaciones del PROVEEDOR, aprobar los informes y emitir las conformidades correspondientes.",
+      "tareas_cumplimiento": [
+        { "obligacion": "Emitir el informe final de evaluación del desempeño del PROVEEDOR al cierre del contrato", "dias_plazo": 365, "prioridad": "BAJA" }
+      ]
+    }
+  ]
+}

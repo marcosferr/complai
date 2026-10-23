@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuevo Archivo - UNI Contratos</title>
+    <style>
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #334155;
+            background-color: #F8FAFC;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 650px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+            padding: 40px 30px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #ffffff;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .header p {
+            color: #E2E8F0;
+            margin: 10px 0 0 0;
+            font-size: 16px;
+        }
+        .content {
+            padding: 40px 30px;
+        }
+        .greeting {
+            font-size: 18px;
+            color: #1E293B;
+            margin-bottom: 20px;
+        }
+        .intro {
+            color: #64748B;
+            margin-bottom: 30px;
+            font-size: 15px;
+        }
+        .file-card {
+            background-color: #F8FAFC;
+            border-left: 4px solid #10B981;
+            border-radius: 8px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+        .task-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1E293B;
+            margin: 0 0 15px 0;
+        }
+        .file-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        .file-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 20px;
+            margin-right: 15px;
+        }
+        .file-details {
+            flex: 1;
+        }
+        .file-name {
+            font-weight: 600;
+            color: #1E293B;
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+        .file-meta {
+            color: #64748B;
+            font-size: 13px;
+        }
+        .uploader-info {
+            background-color: #ffffff;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+        .uploader-row {
+            display: flex;
+            align-items: center;
+        }
+        .uploader-avatar {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 14px;
+            margin-right: 10px;
+        }
+        .uploader-text {
+            color: #64748B;
+            font-size: 14px;
+        }
+        .uploader-name {
+            font-weight: 600;
+            color: #1E293B;
+        }
+        .task-details {
+            background-color: #ffffff;
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 15px;
+        }
+        .detail-row {
+            display: flex;
+            padding: 10px 0;
+            border-bottom: 1px solid #E2E8F0;
+        }
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #334155;
+            min-width: 140px;
+        }
+        .detail-value {
+            color: #64748B;
+            flex: 1;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #10B981 0%, #34D399 100%);
+            color: #ffffff;
+            text-decoration: none;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 15px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .cta-button:hover {
+            background: linear-gradient(135deg, #059669 0%, #10B981 100%);
+        }
+        .footer {
+            background-color: #F8FAFC;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #E2E8F0;
+        }
+        .footer p {
+            color: #64748B;
+            font-size: 13px;
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>📎 Nuevo Archivo Subido</h1>
+            <p>UNI Contratos</p>
+        </div>
+
+        <!-- Content -->
+        <div class="content">
+            <p class="greeting">Hola {{ usuario_nombre }},</p>
+            
+            <p class="intro">
+                Se ha subido un nuevo archivo a una tarea que estás siguiendo:
+            </p>
+
+            <!-- File Card -->
+            <div class="file-card">
+                <h2 class="task-title">{{ tarea.titulo }}</h2>
+                
+                <div class="file-info">
+                    <div class="file-icon">
+                        📄
+                    </div>
+                    <div class="file-details">
+                        <div class="file-name">{{ archivo.nombre_original }}</div>
+                        <div class="file-meta">
+                            {% if archivo.tamanio %}
+                                {% if archivo.tamanio < 1024 %}
+                                    {{ archivo.tamanio }} bytes
+                                {% elif archivo.tamanio < 1048576 %}
+                                    {{ archivo.tamanio|floatformat:1|slice:":-2" }} KB
+                                {% else %}
+                                    {{ archivo.tamanio|floatformat:1|slice:":-2" }} MB
+                                {% endif %}
+                            {% endif %}
+                            {% if archivo.tipo_mime %}
+                                • {{ archivo.tipo_mime }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="uploader-info">
+                    <div class="uploader-row">
+                        <div class="uploader-avatar">
+                            {{ uploader.get_full_name.0|upper|default:uploader.email.0|upper }}
+                        </div>
+                        <div class="uploader-text">
+                            Subido por <span class="uploader-name">{{ uploader.get_full_name|default:uploader.email }}</span>
+                            el {{ archivo.fecha_subida|date:"d/m/Y H:i" }}
+                        </div>
+                    </div>
+                </div>
+
+                {% if archivo.descripcion %}
+                <div style="background-color: #ffffff; padding: 15px; border-radius: 6px; margin-top: 15px;">
+                    <div style="font-weight: 600; color: #334155; margin-bottom: 5px;">Descripción:</div>
+                    <div style="color: #64748B; font-size: 14px;">{{ archivo.descripcion }}</div>
+                </div>
+                {% endif %}
+
+                <div class="task-details">
+                    <div class="detail-row">
+                        <span class="detail-label">📅 Vencimiento:</span>
+                        <span class="detail-value">{{ tarea.fecha_vencimiento|date:"d/m/Y" }}</span>
+                    </div>
+                    
+                    {% if tarea.area %}
+                    <div class="detail-row">
+                        <span class="detail-label">🏢 Área:</span>
+                        <span class="detail-value">{{ tarea.area.nombre }}</span>
+                    </div>
+                    {% endif %}
+
+                    <div class="detail-row">
+                        <span class="detail-label">📊 Etapa:</span>
+                        <span class="detail-value">{{ tarea.get_etapa_actual_display }}</span>
+                    </div>
+
+                    <div class="detail-row">
+                        <span class="detail-label">🔄 Estado:</span>
+                        <span class="detail-value">{{ tarea.get_estado_etapa_display }}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Call to Action -->
+            <div style="text-align: center; margin-top: 30px;">
+                <a href="{{ tarea_url }}" class="cta-button">
+                    Ver Archivo en Tarea →
+                </a>
+            </div>
+
+            <p style="color: #64748B; font-size: 14px; margin-top: 30px;">
+                Accede al sistema para descargar y revisar el archivo completo.
+            </p>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p><strong>UNI Contratos</strong></p>
+            <p>Sistema de Gestión de Cumplimiento Normativo</p>
+            <p style="margin-top: 15px;">
+                Este es un correo automático, por favor no responder.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
