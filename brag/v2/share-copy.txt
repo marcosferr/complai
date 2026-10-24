@@ -1,0 +1,1 @@
+UNI Contratos: cargás un contrato de obra y lo convierte en un tablero de seguimiento — obligaciones por cláusula, plazos con semáforo, entregables, documentación pendiente, desvíos con riesgo y alertas con acciones. Prototipo para el Desafío 1 de la Hackatón SOPAIA de la Universidad Nacional de Itapúa. (Datos basados en un dictamen anonimizado; personas ficticias.)

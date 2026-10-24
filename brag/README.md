@@ -3,6 +3,7 @@
 Video para la Hackatón SOPAIA (Desafío 1), hecho con la interfaz real de la app.
 
 - `v1/brag.mp4` — primera versión (49 s, 1080p30, música original sintetizada).
+- `v2/brag.mp4` — versión lenta y legible (78 s, 60 BPM) con datos de un dictamen de modificación contractual anonimizado (`scripts/seed_obra.py`, `scripts/render_v2.cjs`, `audio/synth_v2.py`).
 - `v1/brag.jpg` — póster (también es el cuadro 0 del video).
 - `v1/share-copy.txt` — texto para compartir.
 - `brag-plan.md` — guion y storyboard.
