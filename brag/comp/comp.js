@@ -80,28 +80,20 @@ const CAPS = [
 ];
 
 const SHEET_HTML = `
-<h1>CONTRATO DE PRESTACIÓN DE SERVICIOS</h1>
-<div class="k-sub">Mantenimiento preventivo y correctivo de equipos de climatización</div>
-<div class="k-parties">Entre la UNIVERSIDAD NACIONAL DE ITAPÚA (en adelante, la UNI) y el PROVEEDOR, se celebra el presente contrato, sujeto a las siguientes cláusulas:</div>
-<h2>CLÁUSULA 1 — OBJETO DEL CONTRATO</h2>
-<p>El PROVEEDOR se obliga a prestar a la UNI el servicio de mantenimiento preventivo y correctivo de los equipos de climatización instalados en la Sede Central y en las Facultades, conforme a las Especificaciones Técnicas del llamado.</p>
-<h2>CLÁUSULA 2 — PLAZO DE VIGENCIA</h2>
-<p>El contrato tendrá una vigencia de <span class="k-hl" data-h="0">doce (12) meses</span> contados a partir de la firma del acta de inicio de servicios, pudiendo ampliarse conforme a la normativa vigente.</p>
-<h2>CLÁUSULA 3 — GARANTÍA DE FIEL CUMPLIMIENTO</h2>
-<p>Dentro de los <span class="k-hl" data-h="1">diez (10) días calendario</span> siguientes a la firma del contrato, el PROVEEDOR deberá presentar una garantía de fiel cumplimiento equivalente al cinco por ciento (5%) del monto total del contrato.</p>
-<h2>CLÁUSULA 4 — PLAN DE MANTENIMIENTO Y ENTREGABLES</h2>
-<p>El PROVEEDOR realizará mantenimientos preventivos mensuales y presentará, dentro de los <span class="k-hl" data-h="2">cinco (5) días hábiles</span> posteriores a cada visita, un informe técnico firmado por un profesional matriculado.</p>
-<h2>CLÁUSULA 5 — TIEMPOS DE RESPUESTA</h2>
-<p>Ante un pedido de mantenimiento correctivo, el PROVEEDOR deberá presentarse dentro de las <span class="k-hl" data-h="3">veinticuatro (24) horas</span> si la falla afecta aulas, laboratorios o salas de servidores, y dentro de las setenta y dos (72) horas en los demás casos.</p>
-<h2>CLÁUSULA 6 — FORMA DE PAGO Y DOCUMENTACIÓN</h2>
-<p>La UNI abonará mensualmente los servicios efectivamente prestados, previa presentación de la factura, el informe técnico aprobado, el certificado de cumplimiento tributario y la constancia de pago del IPS.</p>
-<h2>CLÁUSULA 7 — MULTAS Y PENALIDADES</h2>
-<p>El atraso dará lugar a una multa del <span class="k-hl" data-h="4">0,5% del monto mensual por cada día de atraso</span>, hasta un máximo del diez por ciento (10%) del monto total del contrato.</p>
-<h2>CLÁUSULA 8 — ADMINISTRADOR DEL CONTRATO</h2>
-<p>La UNI designa como Administrador del Contrato al responsable de la Dirección de Infraestructura.</p>`;
+<h1>DICTAMEN [IDENTIFICADOR OMITIDO]</h1>
+<div class="k-sub">Para la solicitud de modificación contractual</div>
+<div class="k-parties"><b>Vista:</b> la solicitud de la empresa [CONTRATISTA ANONIMIZADO] para la ejecución del Contrato [IDENTIFICADOR OMITIDO] de la LPN [IDENTIFICADOR OMITIDO], en la que solicita la suscripción de un convenio modificatorio de monto y plazo.</div>
+<h2>CONSIDERANDO</h2>
+<p>Que el presente dictamen técnico se emite en el marco del Contrato [IDENTIFICADOR OMITIDO], cuyo plazo original de ejecución es de <span class="k-hl" data-h="0">257 días calendario</span>, con inicio el [FECHA OMITIDA].</p>
+<p style="margin-top:14px">Que la Ley 7021/2022, art. 67, dispone que las modificaciones deberán ser formalizadas por escrito, previa autorización por acto administrativo basado en un <span class="k-hl" data-h="1">dictamen fundado del administrador de Contrato</span>, y deberán ser <span class="k-hl" data-h="2">suscritas por la máxima autoridad</span>.</p>
+<p style="margin-top:14px">Que en ningún caso podrán exceder, conjunta o separadamente, <span class="k-hl" data-h="3">el 20% del monto y plazo</span> originalmente pactados. Queda prohibido realizar modificaciones sobre contratos vencidos.</p>
+<h2>FUNDAMENTO TÉCNICO</h2>
+<p>En la etapa de Obra Gris se constató la necesidad de ejecutar rubros nuevos: reparación de fisuras, mamposterías, revoques, refuerzo de la estructura del techo, tablero eléctrico y pre instalación de aires acondicionados.</p>
+<h2>POR LO EXPUESTO</h2>
+<p>Corresponde dar lugar a la ampliación del plazo en <span class="k-hl" data-h="4">20 (veinte) días calendario</span>, sin superar el límite del 20% del monto y plazo originalmente pactados.</p>`;
 const HL = [
-  { t: 0.6, tag: '12 meses' }, { t: 1.2, tag: '10 días' }, { t: 1.8, tag: '5 días hábiles' },
-  { t: 3.0, tag: '24 h' }, { t: 3.6, tag: '0,5 % por día' },
+  { t: 0.6, tag: '257 días' }, { t: 1.2, tag: 'Dictamen fundado', noTag: true }, { t: 1.8, tag: 'Firma autoridad', noTag: true },
+  { t: 3.0, tag: 'Tope 20 %' }, { t: 3.6, tag: '+20 días' },
 ];
 
 // ───────────────────────── estado global ─────────────────────────
@@ -155,7 +147,7 @@ async function build() {
   S.tags = HL.map(h => mk('div', 'k-tag', S.sheet, `<span class="material-icons">schedule</span>${h.tag}`));
   const hookLines = [
     { y: 300, txt: ['Un', 'contrato.'], color: [C.ink, C.ink] },
-    { y: 420, txt: ['11', 'obligaciones.'], color: [C.bordo, C.ink] },
+    { y: 420, txt: ['13', 'obligaciones.'], color: [C.bordo, C.ink] },
     { y: 300, txt: ['Seguimiento'], color: [C.ink] },
     { y: 420, txt: ['de', 'forma', 'manual.'], color: [C.ink, C.ink, C.bordo] },
   ];
@@ -208,7 +200,7 @@ async function build() {
   });
   const edges = [...tmp.querySelectorAll('[data-testid^="rf__edge-"]')].map(e => e.dataset.testid.replace('rf__edge-', ''));
   GRAPH = { nodes, edges };
-  S.gLabels = ['1 contrato', '8 cláusulas', '11 obligaciones'].map(t => {
+  S.gLabels = ['1 contrato', '6 cláusulas', '13 obligaciones'].map(t => {
     const [n, ...w] = t.split(' ');
     return mk('div', 'k-gLabel', S.gInner, `<b>${n}</b>${w.join(' ')}`);
   });
@@ -281,7 +273,7 @@ async function build() {
     <span class="k-step"><b>D2</b>Tutor para administradores</span>
     <span class="k-step"><b>D6</b>Historial de proveedores</span>
     <span class="k-step"><b>D8</b>IA UNI local</span>`);
-  S.foot = mk('div', 'k-foot', S.ui, 'Contrato y datos de demostración ficticios · Interfaz real de UNI Contratos');
+  S.foot = mk('div', 'k-foot', S.ui, 'Datos basados en un dictamen anonimizado · Personas ficticias · Interfaz real de UNI Contratos');
   css(S.foot, { left: '0', top: '1012px' });
 
   // Cursor, arco, viñeta
@@ -334,7 +326,7 @@ function measure() {
   const card = (e, minW = 0) => climb(e, x => /rounded/.test(x.className) && (x.className.includes('border') || x.className.includes('shadow')) && x.getBoundingClientRect().width > minW);
 
   // Ficha
-  const h1 = g('docdetail', 'Contrato de Mantenimiento de Climatización 2026', { sel: 'h1,h2,h3' });
+  const h1 = g('docdetail', 'Contrato de Obra LPN – Unidad Académica', { sel: 'h1,h2,h3' });
   R.docHdr = rectIn(card(h1, 900));
   R.docTitle = rectIn(h1);
   R.docFicha = union(R.docTitle, rectIn(g('docdetail', 'COMPLETADO')));
@@ -345,14 +337,14 @@ function measure() {
   COUNTS.push({ el: clVal, to: +clVal.textContent.trim(), t0: 11.05, d: 0.6, page: 'docdetail' });
 
   // Tablero Kanban
-  const chips = ['Vence en 365 días', 'Vence en 5 días', 'Vencida hace 4 días'].map(t => g('tareas', t, { exact: true }));
+  const chips = ['Vence en 60 días', 'Vence en 5 días', 'Vencida hace 4 días'].map(t => g('tareas', t, { exact: true }));
   S.chipSrc = chips;
   R.chips = chips.map(rectIn);
   R.chipRows = chips.map(c => rectIn(c.parentElement));
   R.cards = chips.map(c => rectIn(card(c, 300)));
 
   // Entregables
-  const file = g('modal_informe', 'informe_mantenimiento_septiembre.pdf', { exact: true });
+  const file = g('modal_informe', 'informe_fiscal_obra_gris.pdf', { exact: true });
   R.file = rectIn(climb(file, e => e.getBoundingClientRect().width > 380));
   R.informePanel = rectIn(PG.modal_informe.panel);
   const adj = g('modal_informe', 'Adjuntos (1)');
@@ -361,7 +353,7 @@ function measure() {
   // Documentación pendiente
   const chkHead = climb(g('modal_pago', 'Checklist'), e => e.getBoundingClientRect().width > 400);
   R.chkHead = rectIn(chkHead);
-  R.chkItems = ['Factura del mes', 'Informe técnico aprobado', 'Certificado de cumplimiento tributario', 'Constancia de pago de IPS']
+  R.chkItems = ['Solicitud del contratista', 'Dictamen técnico del administrador', 'Planos del esquema eléctrico', 'Acto administrativo de autorización']
     .map(t => rectIn(climb(g('modal_pago', t, { exact: true }), e => e.getBoundingClientRect().width > 380 || e.className.includes('rounded'))));
   R.chkBlock = union(R.chkHead, ...R.chkItems);
   R.pagoPanel = rectIn(PG.modal_pago.panel);
@@ -389,7 +381,7 @@ function measure() {
   R.bell = rectIn(climb(bellPage.querySelector('aside .material-icons'), e => e.tagName === 'BUTTON') || drop);
   const badge = [...bellPage.querySelectorAll('aside span, aside div')].find(e => e.textContent.trim() === '4' && /rounded-full/.test(e.className));
   PG.dash_bell.badge = badge;
-  R.notifItems = ['Acta de inicio requiere atención', 'Obligación vencida: póliza de garantía'].map(t =>
+  R.notifItems = ['Firma del convenio: vencida hace 4 días', 'Vence en 3 días: refuerzo del techo'].map(t =>
     rectIn(climb(g('dash_bell', t), e => e.getBoundingClientRect().height > 50)));
 
   // Acción
@@ -426,42 +418,49 @@ function measure() {
 
 function layoutGraph() {
   const N = GRAPH.nodes;
-  const doc = N['doc-1'];
+  const docId = Object.keys(N).find(k => k.startsWith('doc-'));
+  const doc = N[docId];
   const clauses = Object.values(N).filter(n => n.id.startsWith('clausula-')).sort((a, b) => +a.id.split('-')[1] - +b.id.split('-')[1]);
   const kids = {};
   GRAPH.edges.forEach(e => {
     const m = e.match(/^clausula-tarea-(\d+)-(\d+)$/);
     if (m) (kids[m[1]] = kids[m[1]] || []).push('tarea-' + m[2]);
   });
-  const X = { doc: 220, cl: 760, task: 1150 }, WD = { doc: 380, cl: 300, task: 640 };
+  const X = { doc: 200, cl: 700, task: 1060 }, WD = { doc: 380, cl: 290, task: 380 }, COLW = 400;
   css(doc.wrap, { width: WD.doc + 'px' });
   clauses.forEach(c => css(c.wrap, { width: WD.cl + 'px' }));
   Object.values(N).filter(n => n.id.startsWith('tarea-')).forEach(n => css(n.wrap, { width: WD.task + 'px' }));
-  // alturas
   const hOf = n => n.wrap.offsetHeight;
-  const GAP_T = 10, GAP_ROW = 18;
+  const GAP_T = 10, GAP_ROW = 16;
+  // filas: cada cláusula con sus obligaciones en 1 o 2 columnas
   let rows = clauses.map(c => {
     const ts = (kids[c.id.split('-')[1]] || []).map(id => N[id]);
-    const th = ts.reduce((s, n) => s + hOf(n), 0) + GAP_T * Math.max(0, ts.length - 1);
-    return { c, ts, h: Math.max(hOf(c), th) };
+    const cols = ts.length > 2 ? 2 : 1;
+    const sub = [];
+    for (let i = 0; i < ts.length; i += cols) sub.push(ts.slice(i, i + cols));
+    const th = sub.reduce((s2, r) => s2 + Math.max(...r.map(hOf)), 0) + GAP_T * Math.max(0, sub.length - 1);
+    return { c, ts, sub, h: Math.max(hOf(c), th), th };
   });
-  const total = rows.reduce((s, r) => s + r.h, 0) + GAP_ROW * (rows.length - 1);
+  const total = rows.reduce((s2, r) => s2 + r.h, 0) + GAP_ROW * (rows.length - 1);
   const top0 = 150, avail = 1040 - top0;
-  const g = Math.min(1, avail / total);
+  const g = Math.min(1.12, avail / total);
   GRAPH.scale = g;
   let y = top0 + (avail - total * g) / 2;
   const pos = {};
   const order = [];
   rows.forEach(r => {
     const rh = r.h * g;
-    const cy = y + rh / 2;
-    pos[r.c.id] = { x: X.cl, y: cy - hOf(r.c) * g / 2, w: WD.cl * g, h: hOf(r.c) * g };
-    let ty = y + (rh - (r.ts.reduce((s, n) => s + hOf(n), 0) + GAP_T * Math.max(0, r.ts.length - 1)) * g) / 2;
-    r.ts.forEach(n => { pos[n.id] = { x: X.task, y: ty, w: WD.task * g, h: hOf(n) * g }; ty += (hOf(n) + GAP_T) * g; order.push(n.id); });
+    pos[r.c.id] = { x: X.cl, y: y + rh / 2 - hOf(r.c) * g / 2, w: WD.cl * g, h: hOf(r.c) * g };
+    let ty = y + (rh - r.th * g) / 2;
+    r.sub.forEach(sr => {
+      const sh = Math.max(...sr.map(hOf));
+      sr.forEach((n, k) => { pos[n.id] = { x: X.task + k * COLW * g, y: ty, w: WD.task * g, h: hOf(n) * g }; order.push(n.id); });
+      ty += (sh + GAP_T) * g;
+    });
     y += rh + GAP_ROW * g;
   });
   const docH = hOf(doc) * g;
-  pos['doc-1'] = { x: X.doc, y: 600 - docH / 2, w: WD.doc * g, h: docH };
+  pos[docId] = { x: X.doc, y: 600 - docH / 2, w: WD.doc * g, h: docH };
   for (const id in pos) {
     const p = pos[id], n = N[id];
     css(n.wrap, { left: p.x + 'px', top: p.y + 'px', transform: `scale(${g})`, transformOrigin: '0 0' });
@@ -475,17 +474,17 @@ function layoutGraph() {
     const p = svg('path', { d: `M${x1} ${y1} C${x1 + dx} ${y1}, ${x2 - dx} ${y2}, ${x2} ${y2}`, fill: 'none', stroke: color, 'stroke-width': width, 'stroke-linecap': 'round', pathLength: 1 }, S.edges);
     GRAPH.paths.push({ p, t0, to: b });
   };
-  const NODE_T = { 'doc-1': 12.12 };
-  clauses.forEach((c, i) => { const t0 = 12.3 + i * 0.075; addEdge('doc-1', c.id, '#8B5CF6', 3, t0); NODE_T[c.id] = t0 + 0.24; });
+  const NODE_T = { docId: 12.12 };
+  clauses.forEach((c, i) => { const t0 = 12.3 + i * 0.075; addEdge(docId, c.id, '#8B5CF6', 3, t0); NODE_T[c.id] = t0 + 0.24; });
   order.forEach((id, j) => {
     const cl = clauses.find(c => (kids[c.id.split('-')[1]] || []).includes(id));
-    const t0 = 12.9 + j * 0.075; addEdge(cl.id, id, colorOf(N[id]), 2.2, t0); NODE_T[id] = t0 + 0.24;
+    const t0 = 12.9 + j * 0.05; addEdge(cl.id, id, colorOf(N[id]), 2.2, t0); NODE_T[id] = t0 + 0.24;
   });
   GRAPH.pos = pos; GRAPH.nodeT = NODE_T; GRAPH.order = order; GRAPH.clauses = clauses;
-  css(S.gLabels[0], { left: X.doc + 'px', top: (pos['doc-1'].y - 56) + 'px' });
+  css(S.gLabels[0], { left: X.doc + 'px', top: (pos[docId].y - 56) + 'px' });
   css(S.gLabels[1], { left: X.cl + 'px', top: '96px' });
   css(S.gLabels[2], { left: X.task + 'px', top: '96px' });
-  GRAPH.docCenter = { x: X.doc + pos['doc-1'].w / 2, y: 600 };
+  GRAPH.docCenter = { x: X.doc + pos[docId].w / 2, y: 600 };
 }
 
 // ───────────────────────── keyframes ─────────────────────────
@@ -592,7 +591,7 @@ function prepass() {
   S.btnStage = { x: b.left + b.width * 0.55, y: b.top + b.height * 0.55 };
   render(3.5);
   const hl = S.hls.map(h => ({ x: h.offsetLeft, y: h.offsetTop, w: h.offsetWidth }));
-  S.tags.forEach((tg, i) => css(tg, { left: (hl[i].x - 4) + 'px', top: (hl[i].y - 56) + 'px' }));
+  S.tags.forEach((tg, i) => css(tg, { left: (64 - tg.offsetWidth) + 'px', top: (hl[i].y - 8) + 'px', transformOrigin: '100% 50%' }));
   const mw = S.hookLines[3].words[2];
   const r = mw.getBoundingClientRect();
   S.strikeBox = { x: r.left - 12, y: r.top, w: r.width + 24, h: r.height };
@@ -626,6 +625,7 @@ function renderHook(t) {
     const p = P(t, HL[i].t, 0.38, E.outCubic);
     h.style.backgroundSize = `${p * 100}% 100%`;
     const tg = S.tags[i];
+    if (HL[i].noTag) { tg.style.opacity = 0; return; }
     const q = P(t, HL[i].t + 0.12, 0.5, E.spring);
     tg.style.opacity = clamp(q * 3);
     tg.style.transform = `translateY(${(1 - q) * 18}px) scale(${0.6 + 0.4 * q})`;

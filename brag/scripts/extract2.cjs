@@ -20,7 +20,7 @@ const serialize = (p) => p.evaluate(() => {
   await p.click('button[type=submit]'); await p.waitForTimeout(2500);
   const save = async (n) => { await p.waitForTimeout(1500); fs.writeFileSync(`${OUT}/${n}.html`, await serialize(p)); await p.screenshot({ path: `${OUT}/${n}.png` }); console.log('ok', n); };
   await p.goto(BASE + '/tareas'); await p.waitForTimeout(2500);
-  await p.locator('h3,h4,p', { hasText: 'inventario inicial' }).first().click(); await p.waitForTimeout(1800);
+  await p.locator('h3,h4,p', { hasText: 'estructura metálica del techo' }).first().click(); await p.waitForTimeout(1800);
   await p.getByRole('button', { name: /Enviar a Revisión Gerencial/ }).first().click();
   await p.waitForTimeout(2500); await save('accion_1');
   const confirm = p.getByRole('button', { name: /Confirmar|Enviar|Aceptar/ }).last();
