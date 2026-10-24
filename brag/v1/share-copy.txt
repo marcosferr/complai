@@ -1,0 +1,1 @@
+UNI Contratos: subís un contrato y el sistema lo convierte en un tablero de seguimiento con obligaciones, plazos, entregables, documentación pendiente, semáforo y alertas. Hecho para el Desafío 1 de la Hackatón SOPAIA de la Universidad Nacional de Itapúa. (Contrato y datos de demostración ficticios.)
