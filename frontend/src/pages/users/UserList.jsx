@@ -4,6 +4,7 @@ import { fetchUsers, deleteUser, clearError } from '@/store/slices/usersSlice'
 import { showNotification } from '@/store/slices/uiSlice'
 import UserModal from '@/components/users/UserModal'
 import ConfirmDialog from '@/components/ConfirmDialog'
+import { ROLE_LABELS } from '@/lib/estadoEtapaConstants'
 
 const UserList = () => {
   const dispatch = useDispatch()
@@ -98,12 +99,7 @@ const UserList = () => {
       'RESPONSABLE': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
     }
     
-    const labels = {
-      'OFICIAL_COMPLIANCE': 'Oficial Compliance',
-      'ANALISTA_COMPLIANCE': 'Analista Compliance',
-      'GERENTE': 'Gerente',
-      'RESPONSABLE': 'Responsable'
-    }
+    const labels = ROLE_LABELS
     
     return (
       <span className={`px-2 py-1 rounded-full text-xs font-medium ${colors[role] || colors['RESPONSABLE']}`}>
@@ -151,9 +147,9 @@ const UserList = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               >
                 <option value="">Todos los roles</option>
-                <option value="OFICIAL_COMPLIANCE">Oficial de Compliance</option>
-                <option value="ANALISTA_COMPLIANCE">Analista de Compliance</option>
-                <option value="GERENTE">Gerente</option>
+                <option value="OFICIAL_COMPLIANCE">{ROLE_LABELS.OFICIAL_COMPLIANCE}</option>
+                <option value="ANALISTA_COMPLIANCE">{ROLE_LABELS.ANALISTA_COMPLIANCE}</option>
+                <option value="GERENTE">{ROLE_LABELS.GERENTE}</option>
                 <option value="RESPONSABLE">Responsable</option>
               </select>
             </div>
@@ -220,7 +216,7 @@ const UserList = () => {
                     Rol
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                    Area/Gerencia
+                    Dependencia
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
                     Estado

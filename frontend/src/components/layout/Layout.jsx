@@ -170,7 +170,7 @@ const Layout = ({ children }) => {
           ))}
         </nav>
 
-        {/* Oficial de Compliance y Analista only sections (NO Gerente) */}
+        {/* Solo Administrador/a de Contrato y UOC (no Dirección) */}
         {(user?.role === 'OFICIAL_COMPLIANCE' || user?.role === 'ANALISTA_COMPLIANCE') && (
           <div className="px-4 py-4 space-y-2 border-t border-border-light dark:border-border-dark">
             <Link

@@ -158,7 +158,7 @@ export const devolverConObservaciones = (tareaId, data) => {
   })
 }
 
-// Registrar remisión a la Autoridad (solo Oficial Compliance)
+// Registrar remisión al Rectorado (solo Administrador/a de Contrato)
 export const registrarRemisionAutoridad = (tareaId, data) => {
   // data: { fecha_remision_autoridad, numero_expediente_autoridad?, documento_autoridad? }
   const formData = new FormData()
@@ -188,7 +188,7 @@ export const obtenerEstadisticas = (etapa = null) => {
   return api.get('/tareas/estadisticas/', { params })
 }
 
-// Cambiar etapa directamente (solo Oficial Compliance)
+// Cambiar etapa directamente (solo Administrador/a de Contrato)
 export const cambiarEtapaDirecto = (tareaId, data) => {
   // data: { etapa_destino, estado_destino, observaciones? }
   return api.post(`/tareas/${tareaId}/cambiar-etapa/`, data)
@@ -223,7 +223,7 @@ export const getPresentaciones = (tareaId) => {
   return api.get(`/tareas/${tareaId}/presentaciones/`)
 }
 
-// Archivar una nueva presentación (solo Oficial Compliance)
+// Archivar una nueva presentación (solo Administrador/a de Contrato)
 export const archivarPresentacion = (tareaId, data) => {
   // data: { nombre, descripcion? }
   return api.post(`/tareas/${tareaId}/presentaciones/archivar/`, data)

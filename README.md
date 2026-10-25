@@ -17,16 +17,22 @@ plazos, entregables, responsables, evidencias y alertas.
 | **6. Historial de proveedores** | Historial de estados, comentarios, archivos de respaldo y auditorías por obligación, reutilizables como "historia clínica" del proveedor. |
 | **8. IA UNI local** | El procesamiento de IA está aislado en `backend/apps/documentos/tasks.py` y se puede apuntar a un modelo open source servido localmente. |
 
-## Flujo de una obligación
+## Flujo de aprobación (universidad pública)
 
-1. **Inicio** — el responsable de la dependencia carga la evidencia.
-2. **Revisión gerencial** — la jefatura del área valida u observa.
-3. **Control del analista** — el analista de contratos revisa.
-4. **Control del oficial** — el administrador valida y, si corresponde, remite a la
-   **Autoridad** (Rectorado, UOC u otra instancia), que aprueba, observa o rechaza.
+| # | Etapa | Quién actúa | Qué hace |
+|---|---|---|---|
+| 1 | **Inicio** | Responsable Técnico (p. ej. fiscal de obras, técnico de la unidad requirente) | Ejecuta y carga la evidencia de la obligación. |
+| 2 | **Revisión de la Dirección** | Director/a de Dependencia (Decano/a o Director/a) | Da el visto bueno u observa lo presentado por su dependencia. |
+| 3 | **Control de la UOC** | Analista de Contratos (Unidad Operativa de Contrataciones) | Controla el cumplimiento técnico y documental. |
+| 4 | **Control del Administrador** | Administrador/a de Contrato (designado/a por resolución) | Valida, emite el dictamen y, si corresponde, remite al **Rectorado**. |
+| — | **Rectorado** | Máxima autoridad (Ley 7021/2022, art. 67) | Aprueba, observa o rechaza (p. ej. convenios modificatorios). |
 
-"Autoridad" es deliberadamente genérica; los textos están en
-`frontend/src/lib/estadoEtapaConstants.js` y `backend/apps/tareas/models.py`.
+Cada etapa puede devolver la obligación a la anterior con observaciones.
+
+Las etiquetas viven en `frontend/src/lib/estadoEtapaConstants.js` (roles, etapas y estados) y en los
+`choices` de `backend/apps/authentication/models.py` y `backend/apps/tareas/models.py`. Los códigos
+internos (`GERENTE`, `REVISION_GERENCIAL`, `OFICIAL_COMPLIANCE`, …) se mantienen por compatibilidad con
+la base de datos y los permisos.
 
 ## Inicio rápido
 

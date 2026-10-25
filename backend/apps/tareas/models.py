@@ -44,42 +44,42 @@ class TareaCumplimiento(models.Model):
     # Etapas del flujo de compliance
     ETAPA_CHOICES = [
         ('INICIO', 'Inicio'),
-        ('REVISION_GERENCIAL', 'Revisión Gerencial'),
-        ('CONTROL_ANALISTA', 'Control de Analista'),
-        ('CONTROL_OFICIAL', 'Control Oficial'),
+        ('REVISION_GERENCIAL', 'Revisión de la Dirección'),
+        ('CONTROL_ANALISTA', 'Control de la UOC'),
+        ('CONTROL_OFICIAL', 'Control del Administrador'),
     ]
 
-    # Estados por etapa - Etapa 1: Inicio (Responsable)
+    # Estados por etapa - Etapa 1: Inicio (Responsable Técnico)
     ESTADO_ETAPA_1_CHOICES = [
         ('PENDIENTE', 'Pendiente'),
         ('EN_PROGRESO', 'En Progreso'),
         ('REQUIERE_ATENCION', 'Requiere Atención'),
-        ('OBSERVADO_GERENTE', 'Devuelto con Observaciones del Gerente'),
+        ('OBSERVADO_GERENTE', 'Devuelto con Observaciones de la Dirección'),
     ]
 
-    # Estados por etapa - Etapa 2: Revisión Gerencial (Gerente)
+    # Estados por etapa - Etapa 2: Revisión de la Dirección (Director/a de la dependencia)
     ESTADO_ETAPA_2_CHOICES = [
-        ('REVISION_GERENCIAL', 'Revisión Gerencial'),
-        ('VALIDADO_GERENTE', 'Validado por Gerente'),
-        ('OBSERVADO_ANALISTA', 'Con Observaciones del Analista'),
+        ('REVISION_GERENCIAL', 'En Revisión de la Dirección'),
+        ('VALIDADO_GERENTE', 'Validado por la Dirección'),
+        ('OBSERVADO_ANALISTA', 'Con Observaciones de la UOC'),
     ]
 
-    # Estados por etapa - Etapa 3: Control Analista
+    # Estados por etapa - Etapa 3: Control de la UOC
     ESTADO_ETAPA_3_CHOICES = [
-        ('REVISION_ANALISTA', 'En Revisión del Analista'),
-        ('EN_PROGRESO_ANALISTA', 'En Progreso Analista'),
-        ('OBSERVADO_OFICIAL', 'Devuelto con Observaciones del Oficial'),
-        ('PENDIENTE_VALIDACION_OFICIAL', 'Pendiente Validación Oficial'),
+        ('REVISION_ANALISTA', 'En Revisión de la UOC'),
+        ('EN_PROGRESO_ANALISTA', 'En Progreso (UOC)'),
+        ('OBSERVADO_OFICIAL', 'Devuelto con Observaciones del Administrador'),
+        ('PENDIENTE_VALIDACION_OFICIAL', 'Pendiente Validación del Administrador'),
     ]
 
-    # Estados por etapa - Etapa 4: Control Oficial
+    # Estados por etapa - Etapa 4: Control del Administrador/a de Contrato
     ESTADO_ETAPA_4_CHOICES = [
         ('PENDIENTE_VALIDACION', 'Pendiente Validación'),
         ('VALIDADA', 'Validada'),
-        ('REMITIDO_AUTORIDAD', 'Remitido a la Autoridad'),
-        ('OBSERVADO_AUTORIDAD', 'Observado por la Autoridad'),
-        ('APROBADO_AUTORIDAD', 'Aprobado por la Autoridad'),
-        ('RECHAZADO_AUTORIDAD', 'Rechazado por la Autoridad'),
+        ('REMITIDO_AUTORIDAD', 'Remitido al Rectorado'),
+        ('OBSERVADO_AUTORIDAD', 'Observado por el Rectorado'),
+        ('APROBADO_AUTORIDAD', 'Aprobado por el Rectorado'),
+        ('RECHAZADO_AUTORIDAD', 'Rechazado por el Rectorado'),
     ]
 
     PRIORIDAD_CHOICES = [
@@ -134,23 +134,23 @@ class TareaCumplimiento(models.Model):
         help_text='Estado específico dentro de la etapa actual'
     )
     
-    # Campos específicos para etapa Autoridad
+    # Campos específicos para la remisión al Rectorado (máxima autoridad)
     fecha_remision_autoridad = models.DateField(
         null=True,
         blank=True,
-        verbose_name='Fecha Remisión a la Autoridad'
+        verbose_name='Fecha Remisión al Rectorado'
     )
     numero_expediente_autoridad = models.CharField(
         max_length=100,
         blank=True,
-        verbose_name='Número de Expediente de la Autoridad'
+        verbose_name='Número de Expediente del Rectorado'
     )
     documento_autoridad = models.FileField(
         upload_to='tareas/autoridad/',
         null=True,
         blank=True,
-        verbose_name='Documento de la Autoridad',
-        help_text='Documento oficial de la Autoridad (aprobación, rechazo u observaciones)'
+        verbose_name='Documento del Rectorado',
+        help_text='Documento oficial del Rectorado (aprobación, rechazo u observaciones)'
     )
     
     prioridad = models.CharField(

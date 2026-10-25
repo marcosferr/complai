@@ -6,6 +6,7 @@ import areaService from '@/services/areaService'
 import AreaModal from './AreaModal'
 import PasswordStrengthIndicator from '@/components/PasswordStrengthIndicator'
 import { validatePassword } from '@/utils/passwordValidation'
+import { ROLE_LABELS, ROLE_DESCRIPTIONS, ROLES_ORDENADOS } from '@/lib/estadoEtapaConstants'
 
 const UserModal = ({ isOpen, onClose, user, onSuccess }) => {
   const dispatch = useDispatch()
@@ -73,7 +74,7 @@ const UserModal = ({ isOpen, onClose, user, onSuccess }) => {
       setAreas(response.data)
     } catch (error) {
       dispatch(showNotification({ 
-        message: 'Error al cargar areas/gerencias', 
+        message: 'Error al cargar las dependencias', 
         type: 'error' 
       }))
     } finally {
@@ -117,7 +118,7 @@ const UserModal = ({ isOpen, onClose, user, onSuccess }) => {
     
     // Área es requerida solo para RESPONSABLE y GERENTE
     if (['RESPONSABLE', 'GERENTE'].includes(formData.role) && !formData.area) {
-      newErrors.area = 'El area/gerencia es requerido para este rol'
+      newErrors.area = 'La dependencia es obligatoria para este rol'
     }
     
     if (!user) {
@@ -329,16 +330,12 @@ const UserModal = ({ isOpen, onClose, user, onSuccess }) => {
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               >
-                <option value="RESPONSABLE">Responsable</option>
-                <option value="GERENTE">Gerente</option>
-                <option value="ANALISTA_COMPLIANCE">Analista de Compliance</option>
-                <option value="OFICIAL_COMPLIANCE">Oficial de Compliance</option>
+                {ROLES_ORDENADOS.map(r => (
+                  <option key={r} value={r}>{ROLE_LABELS[r]}</option>
+                ))}
               </select>
               <p className="text-xs text-gray-500 mt-1">
-                {formData.role === 'RESPONSABLE' && 'Ejecuta tareas asignadas en la Etapa de Inicio'}
-                {formData.role === 'GERENTE' && 'Revisa y aprueba tareas de su área'}
-                {formData.role === 'ANALISTA_COMPLIANCE' && 'Valida cumplimiento técnico y documental'}
-                {formData.role === 'OFICIAL_COMPLIANCE' && 'Control total del proceso y remisión a la Autoridad'}
+                {ROLE_DESCRIPTIONS[formData.role]}
               </p>
             </div>
 
@@ -359,7 +356,7 @@ const UserModal = ({ isOpen, onClose, user, onSuccess }) => {
             {/* Area/Department */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Area/Gerencia {formData.role !== 'OFICIAL_COMPLIANCE' && '*'}
+                Dependencia {formData.role !== 'OFICIAL_COMPLIANCE' && '*'}
               </label>
               <div className="flex gap-2">
                 <select
@@ -371,7 +368,7 @@ const UserModal = ({ isOpen, onClose, user, onSuccess }) => {
                   }`}
                   disabled={loadingAreas}
                 >
-                  <option value="">Seleccionar area/gerencia...</option>
+                  <option value="">Seleccionar dependencia...</option>
                   {areas.map(area => (
                     <option key={area.id} value={area.id}>
                       {area.nombre}
@@ -382,7 +379,7 @@ const UserModal = ({ isOpen, onClose, user, onSuccess }) => {
                   type="button"
                   onClick={() => setShowAreaModal(true)}
                   className="px-3 py-2 bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 rounded-lg border border-gray-300 dark:border-gray-600"
-                  title="Agregar nueva area/gerencia"
+                  title="Agregar nueva dependencia"
                 >
                   <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -394,17 +391,17 @@ const UserModal = ({ isOpen, onClose, user, onSuccess }) => {
               )}
               {!['OFICIAL_COMPLIANCE', 'ANALISTA_COMPLIANCE'].includes(formData.role) && (
                 <p className="text-gray-500 text-xs mt-1">
-                  El area/gerencia es requerido para Responsables y Gerentes
+                  La dependencia es obligatoria para Responsables Técnicos y Directores/as
                 </p>
               )}
               {formData.role === 'OFICIAL_COMPLIANCE' && (
                 <p className="text-blue-500 text-xs mt-1">
-                  Opcional: El Oficial de Compliance puede ver todas las áreas
+                  Opcional: el/la Administrador/a de Contrato ve todas las dependencias
                 </p>
               )}
               {formData.role === 'ANALISTA_COMPLIANCE' && (
                 <p className="text-blue-500 text-xs mt-1">
-                  Opcional: El Analista de Compliance puede ver todas las áreas
+                  Opcional: la UOC ve todas las dependencias
                 </p>
               )}
             </div>

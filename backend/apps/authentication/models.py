@@ -6,10 +6,11 @@ from django.db import models
 class Usuario(AbstractUser):
     """Custom user model for compliance tracking"""
     ROLE_CHOICES = [
-        ('OFICIAL_COMPLIANCE', 'Oficial de Compliance'),
-        ('ANALISTA_COMPLIANCE', 'Analista de Compliance'),
-        ('GERENTE', 'Gerente'),
-        ('RESPONSABLE', 'Responsable'),
+        # Códigos internos estables; etiquetas del flujo universitario.
+        ('OFICIAL_COMPLIANCE', 'Administrador/a de Contrato'),
+        ('ANALISTA_COMPLIANCE', 'Analista de Contratos (UOC)'),
+        ('GERENTE', 'Director/a de Dependencia'),
+        ('RESPONSABLE', 'Responsable Técnico'),
     ]
     
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='RESPONSABLE')
@@ -44,9 +45,9 @@ class Usuario(AbstractUser):
 
     def clean(self):
         super().clean()
-        # Oficial de Compliance no requiere área
+        # Administrador/a de Contrato no requiere dependencia
         if self.role not in ['OFICIAL_COMPLIANCE', 'ANALISTA_COMPLIANCE'] and not self.area:
-            raise ValidationError({'area': 'El área es obligatoria para usuarios que no son Oficial de Compliance.'})
+            raise ValidationError({'area': 'La dependencia es obligatoria salvo para el/la Administrador/a de Contrato.'})
 
     def save(self, *args, **kwargs):
         # Skip validation if explicitly requested (e.g., during user creation)

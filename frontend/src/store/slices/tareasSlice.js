@@ -227,7 +227,7 @@ export const devolverTareaConObservaciones = createAsyncThunk(
   }
 )
 
-// Registrar remisión a la Autoridad
+// Registrar remisión al Rectorado
 export const registrarRemisionAutoridadTarea = createAsyncThunk(
   'tareas/registrarRemisionAutoridad',
   async ({ tareaId, data }, { rejectWithValue }) => {
@@ -266,7 +266,7 @@ export const fetchEstadisticasEtapas = createAsyncThunk(
   }
 )
 
-// Cambiar etapa directamente (solo Oficial Compliance)
+// Cambiar etapa directamente (solo Administrador/a de Contrato)
 export const cambiarEtapaDirecto = createAsyncThunk(
   'tareas/cambiarEtapaDirecto',
   async ({ tareaId, data }, { rejectWithValue }) => {
@@ -481,7 +481,7 @@ const tareasSlice = createSlice({
         state.loading = false
         state.error = action.payload
       })
-      // Registrar remisión a la Autoridad
+      // Registrar remisión al Rectorado
       .addCase(registrarRemisionAutoridadTarea.pending, (state) => {
         state.loading = true
         state.error = null
@@ -526,7 +526,7 @@ const tareasSlice = createSlice({
         state.loading = false
         state.error = action.payload
       })
-      // Cambiar etapa directo (Oficial Compliance)
+      // Cambiar etapa directo (Administrador/a de Contrato)
       .addCase(cambiarEtapaDirecto.pending, (state) => {
         state.loading = true
         state.error = null

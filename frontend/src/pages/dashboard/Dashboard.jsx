@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchDashboardStats } from '../../store/slices/dashboardSlice'
+import { ETAPA_LABELS, getRoleLabel, getEstadoEtapaLabel } from '@/lib/estadoEtapaConstants'
 
 const Dashboard = () => {
   const dispatch = useDispatch()
@@ -118,7 +119,7 @@ const Dashboard = () => {
             <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-lg border border-border-light dark:border-border-dark shadow-sm">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-subtle-light dark:text-subtle-dark mb-1">En Revisión Gerencial</p>
+                  <p className="text-sm text-subtle-light dark:text-subtle-dark mb-1">En Revisión de la Dirección</p>
                   <p className="text-3xl font-bold text-audit">{stats.tareas.en_revision}</p>
                 </div>
                 <span className="material-icons text-audit text-4xl">fact_check</span>
@@ -183,7 +184,7 @@ const Dashboard = () => {
             <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-lg border border-border-light dark:border-border-dark shadow-sm">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-subtle-light dark:text-subtle-dark mb-1">En Control Analista</p>
+                  <p className="text-sm text-subtle-light dark:text-subtle-dark mb-1">En Control de la UOC</p>
                   <p className="text-3xl font-bold text-audit">{stats.tareas.en_control}</p>
                 </div>
                 <span className="material-icons text-audit text-4xl">analytics</span>
@@ -288,7 +289,7 @@ const Dashboard = () => {
             <div className="bg-success bg-opacity-10 p-6 rounded-lg border border-success shadow-sm">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-success mb-1 font-medium">Remitidas a la Autoridad</p>
+                  <p className="text-sm text-success mb-1 font-medium">Remitidas al Rectorado</p>
                   <p className="text-3xl font-bold text-success">{stats.tareas.remitidas_autoridad}</p>
                 </div>
                 <span className="material-icons text-success text-4xl">send</span>
@@ -298,7 +299,7 @@ const Dashboard = () => {
             <div className="bg-success bg-opacity-10 p-6 rounded-lg border border-success shadow-sm">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-sm text-success mb-1 font-medium">Aprobadas por la Autoridad</p>
+                  <p className="text-sm text-success mb-1 font-medium">Aprobadas por el Rectorado</p>
                   <p className="text-3xl font-bold text-success">{stats.tareas.aprobadas_autoridad}</p>
                 </div>
                 <span className="material-icons text-success text-4xl">verified</span>
@@ -315,12 +316,8 @@ const Dashboard = () => {
   // Obtener título del rol en español
   const getRoleTitulo = () => {
     const roles = {
-      'RESPONSABLE': 'Responsable',
-      'GERENTE': 'Gerente',
-      'ANALISTA_COMPLIANCE': 'Analista de Compliance',
-      'OFICIAL_COMPLIANCE': 'Oficial de Compliance',
     }
-    return roles[user?.role] || user?.role
+    return getRoleLabel(user?.role)
   }
 
   // Obtener el tiempo del día para saludo
@@ -409,7 +406,7 @@ const Dashboard = () => {
                       {item.titulo}
                     </p>
                     <p className="text-xs text-subtle-light dark:text-subtle-dark mt-1">
-                      {item.etapa} - {item.estado_etapa}
+                      {item.etapa} - {getEstadoEtapaLabel(item.estado_etapa)}
                     </p>
                     <p className="text-xs text-subtle-light dark:text-subtle-dark mt-1">
                       {new Date(item.fecha).toLocaleDateString('es-ES', {
@@ -489,15 +486,15 @@ const Dashboard = () => {
             </div>
             <div className="text-center p-4 bg-background-light dark:bg-background-dark rounded-lg">
               <p className="text-2xl font-bold text-audit">{stats.tareas.en_revision_gerencial}</p>
-              <p className="text-xs text-subtle-light dark:text-subtle-dark mt-1">Revisión Gerencial</p>
+              <p className="text-xs text-subtle-light dark:text-subtle-dark mt-1">{ETAPA_LABELS.REVISION_GERENCIAL}</p>
             </div>
             <div className="text-center p-4 bg-background-light dark:bg-background-dark rounded-lg">
               <p className="text-2xl font-bold text-primary">{stats.tareas.en_control_analista}</p>
-              <p className="text-xs text-subtle-light dark:text-subtle-dark mt-1">Control Analista</p>
+              <p className="text-xs text-subtle-light dark:text-subtle-dark mt-1">{ETAPA_LABELS.CONTROL_ANALISTA}</p>
             </div>
             <div className="text-center p-4 bg-background-light dark:bg-background-dark rounded-lg">
               <p className="text-2xl font-bold text-success">{stats.tareas.en_control_oficial}</p>
-              <p className="text-xs text-subtle-light dark:text-subtle-dark mt-1">Control Oficial</p>
+              <p className="text-xs text-subtle-light dark:text-subtle-dark mt-1">{ETAPA_LABELS.CONTROL_OFICIAL}</p>
             </div>
           </div>
         </div>

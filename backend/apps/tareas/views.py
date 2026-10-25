@@ -728,7 +728,7 @@ def avanzar_etapa(request, pk):
         tarea.refresh_from_db()
         return Response(
             {
-                'message': f'Tarea avanzada a etapa {tarea.etapa_actual}',
+                'message': f'Obligación avanzada a {tarea.get_etapa_actual_display()}',
                 'tarea': TareaCumplimientoSerializer(tarea, context={'request': request}).data
             },
             status=status.HTTP_200_OK
@@ -802,7 +802,7 @@ def devolver_con_observaciones(request, pk):
     
     if not puede_devolver:
         return Response(
-            {'error': f'No se puede devolver desde la etapa {etapa_anterior} con el rol {user.role}'},
+            {'error': f'No se puede devolver desde la etapa {dict(TareaCumplimiento.ETAPA_CHOICES).get(etapa_anterior, etapa_anterior)} con el rol {user.get_role_display()}'},
             status=status.HTTP_400_BAD_REQUEST
         )
     
@@ -822,7 +822,7 @@ def devolver_con_observaciones(request, pk):
     
     return Response(
         {
-            'message': f'Tarea devuelta a etapa {tarea.etapa_actual} con observaciones',
+            'message': f'Obligación devuelta a {tarea.get_etapa_actual_display()} con observaciones',
             'tarea': TareaCumplimientoSerializer(tarea, context={'request': request}).data
         },
         status=status.HTTP_200_OK
@@ -841,13 +841,13 @@ def registrar_remision_autoridad(request, pk):
     
     if user.role != 'OFICIAL_COMPLIANCE':
         return Response(
-            {'error': 'Solo el Oficial de Compliance puede registrar remisiones a la Autoridad'},
+            {'error': 'Solo el/la Administrador/a de Contrato puede registrar remisiones al Rectorado'},
             status=status.HTTP_403_FORBIDDEN
         )
     
     if tarea.etapa_actual != 'CONTROL_OFICIAL':
         return Response(
-            {'error': 'La tarea debe estar en etapa de Control Oficial'},
+            {'error': 'La obligación debe estar en la etapa Control del Administrador'},
             status=status.HTTP_400_BAD_REQUEST
         )
     
@@ -878,13 +878,13 @@ def registrar_remision_autoridad(request, pk):
         estado_nuevo='REMITIDO_AUTORIDAD',
         usuario=user,
         rol_usuario=user.role,
-        observaciones=f'Remitido a la Autoridad. Expediente: {numero_expediente}',
+        observaciones=f'Remitido al Rectorado. Expediente: {numero_expediente}',
         documento_adjunto=request.FILES.get('documento_autoridad')
     )
     
     return Response(
         {
-            'message': 'Remisión a la Autoridad registrada exitosamente',
+            'message': 'Remisión al Rectorado registrada exitosamente',
             'tarea': TareaCumplimientoSerializer(tarea, context={'request': request}).data
         },
         status=status.HTTP_200_OK
@@ -959,13 +959,13 @@ def estadisticas_por_etapa(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def cambiar_etapa_directo(request, pk):
-    """Permite al Oficial de Compliance cambiar directamente la etapa de una tarea"""
+    """Permite al/la Administrador/a de Contrato cambiar directamente la etapa de una tarea"""
     user = request.user
     
-    # Solo Oficial de Compliance puede usar este endpoint
+    # Solo el/la Administrador/a de Contrato puede usar este endpoint
     if user.role != "OFICIAL_COMPLIANCE":
         return Response(
-            {"error": "Solo el Oficial de Compliance puede cambiar directamente las etapas"},
+            {"error": "Solo el/la Administrador/a de Contrato puede cambiar directamente las etapas"},
             status=status.HTTP_403_FORBIDDEN
         )
     
@@ -1173,7 +1173,7 @@ def archivar_presentacion(request, tarea_id):
     # Verificar permisos - Solo OFICIAL puede archivar
     if user.role != 'OFICIAL_COMPLIANCE':
         return Response(
-            {'error': 'Solo el Oficial de Compliance puede archivar presentaciones'},
+            {'error': 'Solo el/la Administrador/a de Contrato puede archivar presentaciones'},
             status=status.HTTP_403_FORBIDDEN
         )
     
