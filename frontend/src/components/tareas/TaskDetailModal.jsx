@@ -75,7 +75,7 @@ const TaskDetailModal = ({ isOpen, onClose, tarea, onUpdate }) => {
   const [showArchivarModal, setShowArchivarModal] = useState(false)
 
   // Determinar si mostrar tab de presentaciones
-  const showPresentacionesTab = ['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE'].includes(currentUser?.role)
+  const showPresentacionesTab = ['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO'].includes(currentUser?.role)
 
 
   useEffect(() => {

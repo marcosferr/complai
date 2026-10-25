@@ -11,8 +11,8 @@ const PresentacionesTab = ({ tareaId, onArchivarClick }) => {
     const [expandedId, setExpandedId] = useState(null)
 
     // Solo ANALISTA y OFICIAL pueden ver esta pestaña
-    const puedeVer = user?.role === 'ANALISTA_COMPLIANCE' || user?.role === 'OFICIAL_COMPLIANCE'
-    const puedeArchivar = user?.role === 'OFICIAL_COMPLIANCE'
+    const puedeVer = user?.role === 'ANALISTA_UOC' || user?.role === 'ADMINISTRADOR_CONTRATO'
+    const puedeArchivar = user?.role === 'ADMINISTRADOR_CONTRATO'
 
     useEffect(() => {
         if (tareaId && puedeVer) {

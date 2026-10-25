@@ -5,9 +5,9 @@
 
 // Role constants for consistency
 export const ROLES = {
-  OFICIAL_COMPLIANCE: 'OFICIAL_COMPLIANCE',
-  ANALISTA_COMPLIANCE: 'ANALISTA_COMPLIANCE',
-  GERENTE: 'GERENTE',
+  ADMINISTRADOR_CONTRATO: 'ADMINISTRADOR_CONTRATO',
+  ANALISTA_UOC: 'ANALISTA_UOC',
+  DIRECTOR: 'DIRECTOR',
   RESPONSABLE: 'RESPONSABLE'
 }
 
@@ -46,7 +46,7 @@ const commonSidebarSteps = [
   }
 ]
 
-// Steps only for OFICIAL_COMPLIANCE and ANALISTA_COMPLIANCE
+// Steps only for ADMINISTRADOR_CONTRATO and ANALISTA_UOC
 const complianceOfficerSteps = [
   {
     target: '[data-tutorial="sidebar-documentos"]',
@@ -96,14 +96,14 @@ const tutorialHelpStep = [
 
 /**
  * Get sidebar tutorial steps based on user role
- * @param {string} role - User role (OFICIAL_COMPLIANCE, ANALISTA_COMPLIANCE, GERENTE, RESPONSABLE)
+ * @param {string} role - User role (ADMINISTRADOR_CONTRATO, ANALISTA_UOC, DIRECTOR, RESPONSABLE)
  * @returns {Array} Array of tutorial steps
  */
 export const getSidebarSteps = (role) => {
   let steps = [...commonSidebarSteps]
   
   // Add compliance officer specific steps
-  if (role === ROLES.OFICIAL_COMPLIANCE || role === ROLES.ANALISTA_COMPLIANCE) {
+  if (role === ROLES.ADMINISTRADOR_CONTRATO || role === ROLES.ANALISTA_UOC) {
     // Insert compliance officer steps after the tareas step (index 2)
     steps.splice(3, 0, ...complianceOfficerSteps)
   }

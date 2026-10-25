@@ -53,7 +53,7 @@ def task_status_changed(sender, instance, created, **kwargs):
             usuario_ids = set(tarea.responsables.values_list('id', flat=True))
 
             if tarea.area:
-                gerente_ids = tarea.area.usuarios.filter(role='GERENTE').values_list('id', flat=True)
+                gerente_ids = tarea.area.usuarios.filter(role='DIRECTOR').values_list('id', flat=True)
                 usuario_ids.update(gerente_ids)
 
             if usuario_ids:

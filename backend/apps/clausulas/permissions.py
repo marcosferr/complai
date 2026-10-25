@@ -4,7 +4,7 @@ from rest_framework import permissions
 class CanDeleteClausula(permissions.BasePermission):
     """
     Permission check for clause deletion.
-    Only ANALISTA_COMPLIANCE and OFICIAL_COMPLIANCE can delete clauses.
+    Only ANALISTA_UOC and ADMINISTRADOR_CONTRATO can delete clauses.
     """
     
     def has_permission(self, request, view):
@@ -16,8 +16,8 @@ class CanDeleteClausula(permissions.BasePermission):
         if not request.user or not request.user.is_authenticated:
             return False
         
-        # Solo ANALISTA_COMPLIANCE y OFICIAL_COMPLIANCE pueden eliminar
-        return request.user.role in ['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE']
+        # Solo ANALISTA_UOC y ADMINISTRADOR_CONTRATO pueden eliminar
+        return request.user.role in ['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO']
     
     def has_object_permission(self, request, view, obj):
         # Solo verificar para método DELETE
@@ -28,5 +28,5 @@ class CanDeleteClausula(permissions.BasePermission):
         if not request.user or not request.user.is_authenticated:
             return False
         
-        # Solo ANALISTA_COMPLIANCE y OFICIAL_COMPLIANCE pueden eliminar
-        return request.user.role in ['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE']
+        # Solo ANALISTA_UOC y ADMINISTRADOR_CONTRATO pueden eliminar
+        return request.user.role in ['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO']

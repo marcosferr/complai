@@ -14,10 +14,10 @@ import { TODOS_ESTADOS_ETAPAS } from './estadoEtapaConstants'
 
 // Roles (además del Oficial) que pueden cambiar el estado en cada etapa.
 export const ROLES_POR_ETAPA = {
-  INICIO: ['RESPONSABLE', 'GERENTE'],
-  REVISION_GERENCIAL: ['GERENTE', 'ANALISTA_COMPLIANCE'],
-  CONTROL_ANALISTA: ['ANALISTA_COMPLIANCE'],
-  CONTROL_OFICIAL: [],
+  INICIO: ['RESPONSABLE', 'DIRECTOR'],
+  REVISION_DIRECCION: ['DIRECTOR', 'ANALISTA_UOC'],
+  CONTROL_UOC: ['ANALISTA_UOC'],
+  CONTROL_ADMINISTRADOR: [],
 }
 
 export const ETAPA_DE_ESTADO = Object.fromEntries(
@@ -39,14 +39,14 @@ export const puedeSoltarEn = (tarea, estadoDestino, user) => {
   if (estadoDestino === tarea.estado_etapa) return false
   if (!codigosDisponibles(tarea).includes(estadoDestino)) return false
 
-  if (user.role === 'OFICIAL_COMPLIANCE') return true
+  if (user.role === 'ADMINISTRADOR_CONTRATO') return true
 
   if (!(ROLES_POR_ETAPA[tarea.etapa_actual] || []).includes(user.role)) return false
 
   if (user.role === 'RESPONSABLE') {
     return (tarea.responsables || []).map(Number).includes(Number(user.id))
   }
-  if (user.role === 'GERENTE') {
+  if (user.role === 'DIRECTOR') {
     return tarea.area != null && Number(tarea.area) === Number(user.area)
   }
   return true

@@ -4,7 +4,7 @@ from rest_framework import permissions
 class CanDeleteTarea(permissions.BasePermission):
     """
     Permission check for task deletion.
-    Only ANALISTA_COMPLIANCE and OFICIAL_COMPLIANCE can delete tasks.
+    Only ANALISTA_UOC and ADMINISTRADOR_CONTRATO can delete tasks.
     """
     
     def has_permission(self, request, view):
@@ -16,8 +16,8 @@ class CanDeleteTarea(permissions.BasePermission):
         if not request.user or not request.user.is_authenticated:
             return False
         
-        # Solo ANALISTA_COMPLIANCE y OFICIAL_COMPLIANCE pueden eliminar
-        return request.user.role in ['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE']
+        # Solo ANALISTA_UOC y ADMINISTRADOR_CONTRATO pueden eliminar
+        return request.user.role in ['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO']
     
     def has_object_permission(self, request, view, obj):
         # Solo verificar para método DELETE
@@ -28,8 +28,8 @@ class CanDeleteTarea(permissions.BasePermission):
         if not request.user or not request.user.is_authenticated:
             return False
         
-        # Solo ANALISTA_COMPLIANCE y OFICIAL_COMPLIANCE pueden eliminar
-        return request.user.role in ['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE']
+        # Solo ANALISTA_UOC y ADMINISTRADOR_CONTRATO pueden eliminar
+        return request.user.role in ['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO']
 
 
 class PuedeEditarObligacion(permissions.BasePermission):
@@ -40,7 +40,7 @@ class PuedeEditarObligacion(permissions.BasePermission):
     cumplimiento no lo mueve quien tiene que cumplirlo.
     """
 
-    ROLES_HABILITADOS = ['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE']
+    ROLES_HABILITADOS = ['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO']
 
     def has_permission(self, request, view):
         if not request.user or not request.user.is_authenticated:

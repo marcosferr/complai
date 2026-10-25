@@ -11,16 +11,16 @@ class Command(BaseCommand):
     def handle(self, *args, **options):
         # Mapeo de estados antiguos a nuevos
         mapeo_estados = {
-            # Etapa REVISION_GERENCIAL
-            'DEVUELTO_OBSERVACIONES': 'OBSERVADO_GERENTE',  # Este ya no existe en esta etapa
-            'VALIDACION_GERENCIAL': 'VALIDADO_GERENTE',
+            # Etapa REVISION_DIRECCION
+            'DEVUELTO_OBSERVACIONES': 'OBSERVADO_DIRECCION',  # Este ya no existe en esta etapa
+            'VALIDACION_GERENCIAL': 'VALIDADO_DIRECCION',
             
-            # Etapa CONTROL_ANALISTA
-            'A_VALIDAR_OFICIAL': 'PENDIENTE_VALIDACION_OFICIAL',
-            'VALIDADA_ANALISTA': 'PENDIENTE_VALIDACION_OFICIAL',
+            # Etapa CONTROL_UOC
+            'A_VALIDAR_OFICIAL': 'PENDIENTE_VALIDACION_ADMIN',
+            'VALIDADA_ANALISTA': 'PENDIENTE_VALIDACION_ADMIN',
             
-            # Etapa CONTROL_OFICIAL
-            'VALIDADA': 'PENDIENTE_VALIDACION',  # Solo si está en CONTROL_OFICIAL y es el primer estado
+            # Etapa CONTROL_ADMINISTRADOR
+            'VALIDADA': 'PENDIENTE_VALIDACION',  # Solo si está en CONTROL_ADMINISTRADOR y es el primer estado
         }
         
         total_actualizadas = 0
@@ -30,24 +30,24 @@ class Command(BaseCommand):
             actualizado = False
             
             # Aplicar mapeo según etapa
-            if tarea.etapa_actual == 'REVISION_GERENCIAL':
+            if tarea.etapa_actual == 'REVISION_DIRECCION':
                 if tarea.estado_etapa == 'VALIDACION_GERENCIAL':
-                    tarea.estado_etapa = 'VALIDADO_GERENTE'
+                    tarea.estado_etapa = 'VALIDADO_DIRECCION'
                     actualizado = True
                 # DEVUELTO_OBSERVACIONES ya no es válido en esta etapa
                 elif tarea.estado_etapa == 'DEVUELTO_OBSERVACIONES':
-                    # Mover a INICIO con OBSERVADO_GERENTE
+                    # Mover a INICIO con OBSERVADO_DIRECCION
                     tarea.etapa_actual = 'INICIO'
-                    tarea.estado_etapa = 'OBSERVADO_GERENTE'
+                    tarea.estado_etapa = 'OBSERVADO_DIRECCION'
                     actualizado = True
                     
-            elif tarea.etapa_actual == 'CONTROL_ANALISTA':
+            elif tarea.etapa_actual == 'CONTROL_UOC':
                 if tarea.estado_etapa in ['A_VALIDAR_OFICIAL', 'VALIDADA_ANALISTA']:
-                    tarea.estado_etapa = 'PENDIENTE_VALIDACION_OFICIAL'
+                    tarea.estado_etapa = 'PENDIENTE_VALIDACION_ADMIN'
                     actualizado = True
                     
-            elif tarea.etapa_actual == 'CONTROL_OFICIAL':
-                # Las tareas en CONTROL_OFICIAL con VALIDADA pasan a PENDIENTE_VALIDACION
+            elif tarea.etapa_actual == 'CONTROL_ADMINISTRADOR':
+                # Las tareas en CONTROL_ADMINISTRADOR con VALIDADA pasan a PENDIENTE_VALIDACION
                 if tarea.estado_etapa == 'VALIDADA':
                     tarea.estado_etapa = 'PENDIENTE_VALIDACION'
                     actualizado = True

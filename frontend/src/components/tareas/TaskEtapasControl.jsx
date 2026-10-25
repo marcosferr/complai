@@ -4,7 +4,7 @@ import {
   cambiarEstadoEtapaTarea,
   avanzarEtapaTarea,
   devolverTareaConObservaciones,
-  registrarRemisionAutoridadTarea,
+  registrarRemisionRectoradoTarea,
   cambiarEtapaDirecto,
 } from '@/store/slices/tareasSlice'
 import { showNotification } from '@/store/slices/uiSlice'
@@ -17,7 +17,7 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
   
   const [showEstadoModal, setShowEstadoModal] = useState(false)
   const [showDevolverModal, setShowDevolverModal] = useState(false)
-  const [showAutoridadModal, setShowAutoridadModal] = useState(false)
+  const [showRectoradoModal, setShowRectoradoModal] = useState(false)
   const [showCambiarEtapaModal, setShowCambiarEtapaModal] = useState(false)
   
   const [estadoSeleccionado, setEstadoSeleccionado] = useState('')
@@ -29,16 +29,16 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
   const [estadoDestino, setEstadoDestino] = useState('')
   
   // Datos del Rectorado
-  const [fechaRemisionAutoridad, setFechaRemisionAutoridad] = useState('')
-  const [numeroExpedienteAutoridad, setNumeroExpedienteAutoridad] = useState('')
-  const [documentoAutoridad, setDocumentoAutoridad] = useState(null)
+  const [fechaRemisionRectorado, setFechaRemisionRectorado] = useState('')
+  const [numeroExpedienteRectorado, setNumeroExpedienteRectorado] = useState('')
+  const [documentoRectorado, setDocumentoRectorado] = useState(null)
 
   const getEtapaColor = (etapa) => {
     const colors = {
       INICIO: 'blue',
-      REVISION_GERENCIAL: 'green',
-      CONTROL_ANALISTA: 'yellow',
-      CONTROL_OFICIAL: 'red',
+      REVISION_DIRECCION: 'green',
+      CONTROL_UOC: 'yellow',
+      CONTROL_ADMINISTRADOR: 'red',
     }
     return colors[etapa] || 'gray'
   }
@@ -135,10 +135,10 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
     }
   }
 
-  const handleRegistrarAutoridad = async (e) => {
+  const handleRegistrarRectorado = async (e) => {
     e.preventDefault()
     
-    if (!fechaRemisionAutoridad) {
+    if (!fechaRemisionRectorado) {
       dispatch(showNotification({
         message: 'La fecha de remisión es requerida',
         type: 'warning',
@@ -148,12 +148,12 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
 
     try {
       const data = {
-        fecha_remision_autoridad: fechaRemisionAutoridad,
-        numero_expediente_autoridad: numeroExpedienteAutoridad || undefined,
-        documento_autoridad: documentoAutoridad || undefined,
+        fecha_remision_rectorado: fechaRemisionRectorado,
+        numero_expediente_rectorado: numeroExpedienteRectorado || undefined,
+        documento_rectorado: documentoRectorado || undefined,
       }
 
-      await dispatch(registrarRemisionAutoridadTarea({ 
+      await dispatch(registrarRemisionRectoradoTarea({ 
         tareaId: tarea.id, 
         data 
       })).unwrap()
@@ -163,7 +163,7 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
         type: 'success',
       }))
 
-      setShowAutoridadModal(false)
+      setShowRectoradoModal(false)
       resetForm()
       onUpdate && onUpdate()
     } catch (error) {
@@ -178,9 +178,9 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
     setEstadoSeleccionado('')
     setObservaciones('')
     setDocumentoAdjunto(null)
-    setFechaRemisionAutoridad('')
-    setNumeroExpedienteAutoridad('')
-    setDocumentoAutoridad(null)
+    setFechaRemisionRectorado('')
+    setNumeroExpedienteRectorado('')
+    setDocumentoRectorado(null)
     setEtapaDestino('')
     setEstadoDestino('')
   }
@@ -232,17 +232,17 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
     // Definir estados que permiten avanzar por etapa
     const estadosPermitidos = {
       'INICIO': ['EN_PROGRESO', 'REQUIERE_ATENCION', 'PENDIENTE'],
-      'REVISION_GERENCIAL': ['VALIDADO_GERENTE'],
-      'CONTROL_ANALISTA': ['PENDIENTE_VALIDACION_OFICIAL', 'EN_PROGRESO_ANALISTA'],
-      'CONTROL_OFICIAL': [], // No hay siguiente etapa
+      'REVISION_DIRECCION': ['VALIDADO_DIRECCION'],
+      'CONTROL_UOC': ['PENDIENTE_VALIDACION_ADMIN', 'EN_PROGRESO_UOC'],
+      'CONTROL_ADMINISTRADOR': [], // No hay siguiente etapa
     }
     
     // Verificar si el rol tiene permiso PARA ESA ETAPA ESPECÍFICA
     const rolesPermisosPorEtapa = {
-      'INICIO': ['RESPONSABLE', 'GERENTE', 'OFICIAL_COMPLIANCE'],
-      'REVISION_GERENCIAL': ['GERENTE', 'ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE'],
-      'CONTROL_ANALISTA': ['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE'],
-      'CONTROL_OFICIAL': [],
+      'INICIO': ['RESPONSABLE', 'DIRECTOR', 'ADMINISTRADOR_CONTRATO'],
+      'REVISION_DIRECCION': ['DIRECTOR', 'ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO'],
+      'CONTROL_UOC': ['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO'],
+      'CONTROL_ADMINISTRADOR': [],
     }
     
     // El usuario debe tener permiso para la etapa actual Y el estado debe permitir avanzar
@@ -258,10 +258,10 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
     
     // Definir qué roles pueden cambiar estados en cada etapa
     const rolesPermisosPorEtapa = {
-      'INICIO': ['RESPONSABLE', 'GERENTE', 'OFICIAL_COMPLIANCE'],
-      'REVISION_GERENCIAL': ['GERENTE', 'ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE'],
-      'CONTROL_ANALISTA': ['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE'],
-      'CONTROL_OFICIAL': ['OFICIAL_COMPLIANCE'],
+      'INICIO': ['RESPONSABLE', 'DIRECTOR', 'ADMINISTRADOR_CONTRATO'],
+      'REVISION_DIRECCION': ['DIRECTOR', 'ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO'],
+      'CONTROL_UOC': ['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO'],
+      'CONTROL_ADMINISTRADOR': ['ADMINISTRADOR_CONTRATO'],
     }
     
     return rolesPermisosPorEtapa[etapaActual]?.includes(role) || false
@@ -269,25 +269,25 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
 
   const getSiguienteEtapa = () => {
     const etapas = {
-      'INICIO': ETAPA_LABELS.REVISION_GERENCIAL,
-      'REVISION_GERENCIAL': ETAPA_LABELS.CONTROL_ANALISTA,
-      'CONTROL_ANALISTA': ETAPA_LABELS.CONTROL_OFICIAL,
-      'CONTROL_OFICIAL': null,
+      'INICIO': ETAPA_LABELS.REVISION_DIRECCION,
+      'REVISION_DIRECCION': ETAPA_LABELS.CONTROL_UOC,
+      'CONTROL_UOC': ETAPA_LABELS.CONTROL_ADMINISTRADOR,
+      'CONTROL_ADMINISTRADOR': null,
     }
     return etapas[tarea?.etapa_actual]
   }
 
   const puedeCambiarEtapaDirecto = () => {
-    return user?.role === 'OFICIAL_COMPLIANCE'
+    return user?.role === 'ADMINISTRADOR_CONTRATO'
   }
 
   const puedeDevolver = () => {
     const role = user?.role
-    return ['GERENTE', 'ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE'].includes(role)
+    return ['DIRECTOR', 'ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO'].includes(role)
   }
 
-  const puedeRegistrarAutoridad = () => {
-    return user?.role === 'OFICIAL_COMPLIANCE' && tarea.etapa_actual === 'CONTROL_OFICIAL'
+  const puedeRegistrarRectorado = () => {
+    return user?.role === 'ADMINISTRADOR_CONTRATO' && tarea.etapa_actual === 'CONTROL_ADMINISTRADOR'
   }
 
   if (!tarea) return null
@@ -372,9 +372,9 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
             </button>
           )}
 
-          {puedeRegistrarAutoridad() && (
+          {puedeRegistrarRectorado() && (
             <button
-              onClick={() => setShowAutoridadModal(true)}
+              onClick={() => setShowRectoradoModal(true)}
               className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
             >
               <span className="material-icons text-sm">send</span>
@@ -385,20 +385,20 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
       </div>
 
       {/* Información del Rectorado (si existe) */}
-      {tarea.fecha_remision_autoridad && (
+      {tarea.fecha_remision_rectorado && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <h4 className="font-medium text-blue-900 mb-2 flex items-center gap-2">
             <span className="material-icons text-base">send</span>
             Información del Rectorado
           </h4>
           <div className="space-y-1 text-sm text-blue-800">
-            <p><strong>Fecha de remisión:</strong> {new Date(tarea.fecha_remision_autoridad).toLocaleDateString('es-PY')}</p>
-            {tarea.numero_expediente_autoridad && (
-              <p><strong>Número de expediente:</strong> {tarea.numero_expediente_autoridad}</p>
+            <p><strong>Fecha de remisión:</strong> {new Date(tarea.fecha_remision_rectorado).toLocaleDateString('es-PY')}</p>
+            {tarea.numero_expediente_rectorado && (
+              <p><strong>Número de expediente:</strong> {tarea.numero_expediente_rectorado}</p>
             )}
-            {tarea.documento_autoridad_url && (
+            {tarea.documento_rectorado_url && (
               <a
-                href={tarea.documento_autoridad_url}
+                href={tarea.documento_rectorado_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center text-blue-600 hover:text-blue-800 hover:underline"
@@ -521,22 +521,22 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
       )}
 
       {/* Modal: Registrar remisión al Rectorado */}
-      {showAutoridadModal && (
+      {showRectoradoModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg max-w-md w-full p-6">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-red-600">
               <span className="material-icons">send</span>
               Registrar Remisión al Rectorado
             </h3>
-            <form onSubmit={handleRegistrarAutoridad}>
+            <form onSubmit={handleRegistrarRectorado}>
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Fecha de remisión <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="date"
-                  value={fechaRemisionAutoridad}
-                  onChange={(e) => setFechaRemisionAutoridad(e.target.value)}
+                  value={fechaRemisionRectorado}
+                  onChange={(e) => setFechaRemisionRectorado(e.target.value)}
                   required
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
                 />
@@ -548,8 +548,8 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
                 </label>
                 <input
                   type="text"
-                  value={numeroExpedienteAutoridad}
-                  onChange={(e) => setNumeroExpedienteAutoridad(e.target.value)}
+                  value={numeroExpedienteRectorado}
+                  onChange={(e) => setNumeroExpedienteRectorado(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500"
                   placeholder="EXP-2025-001"
                 />
@@ -561,7 +561,7 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
                 </label>
                 <input
                   type="file"
-                  onChange={(e) => setDocumentoAutoridad(e.target.files[0])}
+                  onChange={(e) => setDocumentoRectorado(e.target.files[0])}
                   className="w-full"
                 />
               </div>
@@ -570,7 +570,7 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
                 <button
                   type="button"
                   onClick={() => {
-                    setShowAutoridadModal(false)
+                    setShowRectoradoModal(false)
                     resetForm()
                   }}
                   className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"

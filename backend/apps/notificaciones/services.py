@@ -200,8 +200,8 @@ class NotificationService:
     def get_usuarios_to_notify(cls, tarea):
         """
         Get users who should receive notifications based on role rules:
-        - OFICIAL_COMPLIANCE and ANALISTA_COMPLIANCE: all notifications
-        - GERENTE: only notifications for their area
+        - ADMINISTRADOR_CONTRATO and ANALISTA_UOC: all notifications
+        - DIRECTOR: only notifications for their area
         - RESPONSABLE: only notifications for tasks where they are responsables
         """
         from apps.authentication.models import Usuario
@@ -210,14 +210,14 @@ class NotificationService:
         
         # 1. Get all Oficial and Analista (receive all notifications)
         oficiales_y_analistas = Usuario.objects.filter(
-            role__in=['OFICIAL_COMPLIANCE', 'ANALISTA_COMPLIANCE']
+            role__in=['ADMINISTRADOR_CONTRATO', 'ANALISTA_UOC']
         )
         usuarios_a_notificar.update(oficiales_y_analistas)
         
         # 2. Get Gerentes of the task's area
         if tarea.area:
             gerentes = Usuario.objects.filter(
-                role='GERENTE',
+                role='DIRECTOR',
                 area=tarea.area
             )
             usuarios_a_notificar.update(gerentes)
@@ -404,7 +404,7 @@ class NotificationService:
         end_date = today + timedelta(days=days)
         
         # Exclude completed tasks
-        estados_completados = ['VALIDADA', 'APROBADO_AUTORIDAD']
+        estados_completados = ['VALIDADA', 'APROBADO_RECTORADO']
         
         return TareaCumplimiento.objects.filter(
             fecha_vencimiento__gte=today,
@@ -430,7 +430,7 @@ class NotificationService:
             
             # Get all Analistas and Oficiales (they see all tasks)
             analistas_oficiales = Usuario.objects.filter(
-                role__in=['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE'],
+                role__in=['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO'],
                 is_active=True
             )
             
@@ -439,7 +439,7 @@ class NotificationService:
             
             # Get Gerentes (they see tasks from their area)
             gerentes = Usuario.objects.filter(
-                role='GERENTE',
+                role='DIRECTOR',
                 is_active=True
             ).exclude(area__isnull=True)
             

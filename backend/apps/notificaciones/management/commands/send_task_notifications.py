@@ -126,14 +126,14 @@ class Command(BaseCommand):
                 
                 # Show what would be sent
                 analistas_oficiales = Usuario.objects.filter(
-                    role__in=['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE'],
+                    role__in=['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO'],
                     is_active=True
                 )
                 self.stdout.write(f'Analistas/Oficiales ({analistas_oficiales.count()}):')
                 for user in analistas_oficiales:
                     self.stdout.write(f'  • {user.get_full_name()} ({user.email}) - {len(tareas)} tasks')
                 
-                gerentes = Usuario.objects.filter(role='GERENTE', is_active=True).exclude(area__isnull=True)
+                gerentes = Usuario.objects.filter(role='DIRECTOR', is_active=True).exclude(area__isnull=True)
                 self.stdout.write(f'\nGerentes ({gerentes.count()}):')
                 for gerente in gerentes:
                     gerente_tasks = tareas.filter(area=gerente.area)

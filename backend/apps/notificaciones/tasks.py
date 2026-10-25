@@ -32,7 +32,7 @@ def check_scheduled_notifications():
         ).select_related('tarea', 'tarea__area', 'tarea__creado_por', 'tarea__clausula').prefetch_related('tarea__responsables')
         
         # Exclude completed tasks
-        estados_completados = ['VALIDADA', 'APROBADO_AUTORIDAD']
+        estados_completados = ['VALIDADA', 'APROBADO_RECTORADO']
         configs = configs.exclude(tarea__estado_etapa__in=estados_completados)
         
         notifications_sent = 0
@@ -73,7 +73,7 @@ def check_scheduled_notifications():
                         if tarea.area:
                             from apps.authentication.models import Usuario
                             gerentes = Usuario.objects.filter(
-                                role='GERENTE',
+                                role='DIRECTOR',
                                 area=tarea.area,
                                 is_active=True
                             )
@@ -82,7 +82,7 @@ def check_scheduled_notifications():
                         # Add analistas and oficiales
                         from apps.authentication.models import Usuario
                         analistas_oficiales = Usuario.objects.filter(
-                            role__in=['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE'],
+                            role__in=['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO'],
                             is_active=True
                         )
                         usuarios_notificar.extend(analistas_oficiales)

@@ -40,7 +40,7 @@ def estadisticas_dashboard(request):
             'pendientes': tareas_qs.filter(estado_etapa='PENDIENTE').count(),
             'en_progreso': tareas_qs.filter(estado_etapa='EN_PROGRESO').count(),
             'requiere_atencion': tareas_qs.filter(estado_etapa='REQUIERE_ATENCION').count(),
-            'observadas': tareas_qs.filter(estado_etapa='OBSERVADO_GERENTE').count(),
+            'observadas': tareas_qs.filter(estado_etapa='OBSERVADO_DIRECCION').count(),
         }
         
         # Tareas próximas a vencer (próximos 7 días)
@@ -56,19 +56,19 @@ def estadisticas_dashboard(request):
             estado_etapa__in=['PENDIENTE', 'EN_PROGRESO', 'REQUIERE_ATENCION']
         ).count()
         
-    elif user.role == 'GERENTE':
-        # Ve tareas de su área en INICIO y REVISION_GERENCIAL
+    elif user.role == 'DIRECTOR':
+        # Ve tareas de su área en INICIO y REVISION_DIRECCION
         tareas_qs = tareas_qs.filter(
             area=user.area,
-            etapa_actual__in=['INICIO', 'REVISION_GERENCIAL']
+            etapa_actual__in=['INICIO', 'REVISION_DIRECCION']
         )
         
         stats['tareas'] = {
             'total': tareas_qs.count(),
             'en_inicio': tareas_qs.filter(etapa_actual='INICIO').count(),
-            'en_revision': tareas_qs.filter(etapa_actual='REVISION_GERENCIAL').count(),
-            'requieren_validacion': tareas_qs.filter(estado_etapa='VALIDACION_GERENCIAL').count(),
-            'con_observaciones': tareas_qs.filter(estado_etapa='OBSERVADO_ANALISTA').count(),
+            'en_revision': tareas_qs.filter(etapa_actual='REVISION_DIRECCION').count(),
+            'requieren_validacion': tareas_qs.filter(etapa_actual='REVISION_DIRECCION', estado_etapa='REVISION_DIRECCION').count(),
+            'con_observaciones': tareas_qs.filter(estado_etapa='OBSERVADO_UOC').count(),
         }
         clausulas_area = Clausula.objects.filter(
             tareas__area=user.area
@@ -86,21 +86,21 @@ def estadisticas_dashboard(request):
         # Usuarios del área
         stats['usuarios_area'] = user.area.usuarios.filter(is_active=True).count()
         
-    elif user.role == 'ANALISTA_COMPLIANCE':
-        # Ve todas las tareas excepto CONTROL_OFICIAL
+    elif user.role == 'ANALISTA_UOC':
+        # Ve todas las tareas excepto CONTROL_ADMINISTRADOR
         tareas_qs = tareas_qs.filter(
-            etapa_actual__in=['INICIO', 'REVISION_GERENCIAL', 'CONTROL_ANALISTA']
+            etapa_actual__in=['INICIO', 'REVISION_DIRECCION', 'CONTROL_UOC']
         )
         
         stats['tareas'] = {
             'total': tareas_qs.count(),
             'para_revision': tareas_qs.filter(
-                etapa_actual='REVISION_GERENCIAL',
-                estado_etapa='REVISION_GERENCIAL'
+                etapa_actual='REVISION_DIRECCION',
+                estado_etapa='REVISION_DIRECCION'
             ).count(),
-            'en_control': tareas_qs.filter(etapa_actual='CONTROL_ANALISTA').count(),
+            'en_control': tareas_qs.filter(etapa_actual='CONTROL_UOC').count(),
             'validadas': tareas_qs.filter(estado_etapa='VALIDADA_ANALISTA').count(),
-            'observadas': tareas_qs.filter(estado_etapa='OBSERVADO_OFICIAL').count(),
+            'observadas': tareas_qs.filter(estado_etapa='OBSERVADO_ADMINISTRADOR').count(),
         }
         
         # Documentos totales
@@ -115,17 +115,17 @@ def estadisticas_dashboard(request):
             'en_progreso': Auditoria.objects.filter(estado='EN_PROGRESO').count(),
         }
         
-    elif user.role == 'OFICIAL_COMPLIANCE':
+    elif user.role == 'ADMINISTRADOR_CONTRATO':
         # Ve todo
         stats['tareas'] = {
             'total': tareas_qs.count(),
             'en_inicio': tareas_qs.filter(etapa_actual='INICIO').count(),
-            'en_revision_gerencial': tareas_qs.filter(etapa_actual='REVISION_GERENCIAL').count(),
-            'en_control_analista': tareas_qs.filter(etapa_actual='CONTROL_ANALISTA').count(),
-            'en_control_oficial': tareas_qs.filter(etapa_actual='CONTROL_OFICIAL').count(),
+            'en_revision_direccion': tareas_qs.filter(etapa_actual='REVISION_DIRECCION').count(),
+            'en_control_uoc': tareas_qs.filter(etapa_actual='CONTROL_UOC').count(),
+            'en_control_administrador': tareas_qs.filter(etapa_actual='CONTROL_ADMINISTRADOR').count(),
             'validadas': tareas_qs.filter(estado_etapa='VALIDADA').count(),
-            'remitidas_autoridad': tareas_qs.filter(estado_etapa='REMITIDO_AUTORIDAD').count(),
-            'aprobadas_autoridad': tareas_qs.filter(estado_etapa='APROBADO_AUTORIDAD').count(),
+            'remitidas_rectorado': tareas_qs.filter(estado_etapa='REMITIDO_RECTORADO').count(),
+            'aprobadas_rectorado': tareas_qs.filter(estado_etapa='APROBADO_RECTORADO').count(),
         }
         
         # Documentos

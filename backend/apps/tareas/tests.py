@@ -27,7 +27,7 @@ class EditarObligacionTests(APITestCase):
         self.area = Area.objects.create(nombre='Infraestructura')
         self.analista = Usuario.objects.create_user(
             username='analista', email='analista@uni.edu.py',
-            password='x', role='ANALISTA_COMPLIANCE', area=self.area
+            password='x', role='ANALISTA_UOC', area=self.area
         )
         self.responsable = Usuario.objects.create_user(
             username='responsable', email='responsable@uni.edu.py',
@@ -64,7 +64,7 @@ class EditarObligacionTests(APITestCase):
         self.assertEqual(registro.valor_nuevo, self.vencimiento_nuevo.isoformat())
         self.assertEqual(registro.motivo, 'Prórroga otorgada por la Autoridad')
         self.assertEqual(registro.usuario, self.analista)
-        self.assertEqual(registro.rol_usuario, 'ANALISTA_COMPLIANCE')
+        self.assertEqual(registro.rol_usuario, 'ANALISTA_UOC')
 
     def test_titulo_no_exige_motivo(self):
         self.client.force_authenticate(self.analista)

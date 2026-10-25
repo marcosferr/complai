@@ -16,35 +16,35 @@ ESTADOS_POR_ETAPA = {
         ('PENDIENTE', 'Pendiente'),
         ('EN_PROGRESO', 'En Progreso'),
         ('REQUIERE_ATENCION', 'Requiere Atención'),
-        ('OBSERVADO_GERENTE', 'Devuelto con Observaciones de la Dirección'),
+        ('OBSERVADO_DIRECCION', 'Devuelto con Observaciones de la Dirección'),
     ],
-    'REVISION_GERENCIAL': [
-        ('REVISION_GERENCIAL', 'En Revisión de la Dirección'),
-        ('VALIDADO_GERENTE', 'Validado por la Dirección'),
-        ('OBSERVADO_ANALISTA', 'Con Observaciones de la UOC'),
+    'REVISION_DIRECCION': [
+        ('REVISION_DIRECCION', 'En Revisión de la Dirección'),
+        ('VALIDADO_DIRECCION', 'Validado por la Dirección'),
+        ('OBSERVADO_UOC', 'Con Observaciones de la UOC'),
     ],
-    'CONTROL_ANALISTA': [
-        ('REVISION_ANALISTA', 'En Revisión de la UOC'),
-        ('EN_PROGRESO_ANALISTA', 'En Progreso (UOC)'),
-        ('OBSERVADO_OFICIAL', 'Devuelto con Observaciones del Administrador'),
-        ('PENDIENTE_VALIDACION_OFICIAL', 'Listo para Validación del Administrador'),
+    'CONTROL_UOC': [
+        ('REVISION_UOC', 'En Revisión de la UOC'),
+        ('EN_PROGRESO_UOC', 'En Progreso (UOC)'),
+        ('OBSERVADO_ADMINISTRADOR', 'Devuelto con Observaciones del Administrador'),
+        ('PENDIENTE_VALIDACION_ADMIN', 'Listo para Validación del Administrador'),
     ],
-    'CONTROL_OFICIAL': [
+    'CONTROL_ADMINISTRADOR': [
         ('PENDIENTE_VALIDACION', 'Pendiente Validación'),
         ('VALIDADA', 'Validada'),
-        ('REMITIDO_AUTORIDAD', 'Remitido al Rectorado'),
-        ('OBSERVADO_AUTORIDAD', 'Observado por el Rectorado'),
-        ('APROBADO_AUTORIDAD', '✅ Aprobado por el Rectorado'),
-        ('RECHAZADO_AUTORIDAD', '❌ Rechazado por el Rectorado'),
+        ('REMITIDO_RECTORADO', 'Remitido al Rectorado'),
+        ('OBSERVADO_RECTORADO', 'Observado por el Rectorado'),
+        ('APROBADO_RECTORADO', '✅ Aprobado por el Rectorado'),
+        ('RECHAZADO_RECTORADO', '❌ Rechazado por el Rectorado'),
     ],
 }
 
 # El Oficial elige entre los 17 estados en un solo selector: el color marca la etapa.
 _MARCA_ETAPA = {
     'INICIO': '🔵',
-    'REVISION_GERENCIAL': '🟢',
-    'CONTROL_ANALISTA': '🟡',
-    'CONTROL_OFICIAL': '🔴',
+    'REVISION_DIRECCION': '🟢',
+    'CONTROL_UOC': '🟡',
+    'CONTROL_ADMINISTRADOR': '🔴',
 }
 
 ETAPA_DE_ESTADO = {
@@ -55,16 +55,16 @@ ETAPA_DE_ESTADO = {
 
 # Roles (además del Oficial) que pueden cambiar el estado de una obligación en cada etapa.
 ROLES_POR_ETAPA = {
-    'INICIO': ['RESPONSABLE', 'GERENTE'],
-    'REVISION_GERENCIAL': ['GERENTE', 'ANALISTA_COMPLIANCE'],
-    'CONTROL_ANALISTA': ['ANALISTA_COMPLIANCE'],
-    'CONTROL_OFICIAL': [],
+    'INICIO': ['RESPONSABLE', 'DIRECTOR'],
+    'REVISION_DIRECCION': ['DIRECTOR', 'ANALISTA_UOC'],
+    'CONTROL_UOC': ['ANALISTA_UOC'],
+    'CONTROL_ADMINISTRADOR': [],
 }
 
 # Estados de la etapa que cada rol puede elegir. Lo que no figura, no lo elige.
 # El Responsable no puede marcarse a sí mismo «observado por el gerente».
 _EXCLUIDOS = {
-    ('INICIO', 'RESPONSABLE'): {'OBSERVADO_GERENTE'},
+    ('INICIO', 'RESPONSABLE'): {'OBSERVADO_DIRECCION'},
 }
 
 
@@ -77,7 +77,7 @@ def estados_disponibles(user, tarea):
     if user is None or not getattr(user, 'is_authenticated', False):
         return []
 
-    if user.role == 'OFICIAL_COMPLIANCE':
+    if user.role == 'ADMINISTRADOR_CONTRATO':
         return [
             (codigo, f'{_MARCA_ETAPA[etapa]} {etiqueta}')
             for etapa, estados in ESTADOS_POR_ETAPA.items()
@@ -97,7 +97,7 @@ def motivo_de_rechazo(user, tarea, nuevo_estado):
     if nuevo_estado not in ETAPA_DE_ESTADO:
         return 'El estado elegido no existe.', 400
 
-    if user.role == 'OFICIAL_COMPLIANCE':
+    if user.role == 'ADMINISTRADOR_CONTRATO':
         return None
 
     if user.role not in ROLES_POR_ETAPA.get(tarea.etapa_actual, []):
@@ -110,7 +110,7 @@ def motivo_de_rechazo(user, tarea, nuevo_estado):
     if user.role == 'RESPONSABLE' and not tarea.responsables.filter(pk=user.pk).exists():
         return 'No estás asignado a esta obligación.', 403
 
-    if user.role == 'GERENTE' and tarea.area_id != user.area_id:
+    if user.role == 'DIRECTOR' and tarea.area_id != user.area_id:
         return 'Esta obligación no pertenece a tu área.', 403
 
     permitidos = {codigo for codigo, _ in estados_disponibles(user, tarea)}

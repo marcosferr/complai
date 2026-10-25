@@ -93,9 +93,9 @@ const UserList = () => {
 
   const getRoleBadge = (role) => {
     const colors = {
-      'OFICIAL_COMPLIANCE': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
-      'ANALISTA_COMPLIANCE': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
-      'GERENTE': 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
+      'ADMINISTRADOR_CONTRATO': 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+      'ANALISTA_UOC': 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+      'DIRECTOR': 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300',
       'RESPONSABLE': 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300'
     }
     
@@ -147,9 +147,9 @@ const UserList = () => {
                 className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary dark:bg-gray-700 dark:border-gray-600 dark:text-white"
               >
                 <option value="">Todos los roles</option>
-                <option value="OFICIAL_COMPLIANCE">{ROLE_LABELS.OFICIAL_COMPLIANCE}</option>
-                <option value="ANALISTA_COMPLIANCE">{ROLE_LABELS.ANALISTA_COMPLIANCE}</option>
-                <option value="GERENTE">{ROLE_LABELS.GERENTE}</option>
+                <option value="ADMINISTRADOR_CONTRATO">{ROLE_LABELS.ADMINISTRADOR_CONTRATO}</option>
+                <option value="ANALISTA_UOC">{ROLE_LABELS.ANALISTA_UOC}</option>
+                <option value="DIRECTOR">{ROLE_LABELS.DIRECTOR}</option>
                 <option value="RESPONSABLE">Responsable</option>
               </select>
             </div>

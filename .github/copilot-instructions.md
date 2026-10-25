@@ -7,7 +7,7 @@ Compliance tracking system with Django backend, React (Vite) frontend, and AI-po
 
 ### Custom User Model
 - Model: `apps.authentication.Usuario` (not Django's User)
-- Roles: `ADMIN`, `GERENTE` (Manager), `RESPONSABLE` (Responsible)
+- Roles: `ADMIN`, `DIRECTOR` (Manager), `RESPONSABLE` (Responsible)
 - Users linked to `Area` (department) - required for non-admin roles
 
 ### Database
@@ -67,7 +67,7 @@ npm run dev  # Starts on port 3000 (proxies to backend:8000)
 
 ### ViewSets & Permissions
 - Use `viewsets.ModelViewSet` with role-based filtering in `get_queryset()`
-- Example: `apps/tareas/views.py` - GERENTE sees only their area, RESPONSABLE sees only assigned tasks
+- Example: `apps/tareas/views.py` - DIRECTOR sees only their area, RESPONSABLE sees only assigned tasks
 
 ### Serializer Pattern
 - Separate create/update serializers: e.g., `TareaCreateSerializer` vs `TareaCumplimientoSerializer`

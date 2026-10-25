@@ -16,9 +16,9 @@ const TaskStateHistory = ({ tareaId }) => {
   const getEtapaColor = (etapa) => {
     const colors = {
       INICIO: 'blue',
-      REVISION_GERENCIAL: 'green',
-      CONTROL_ANALISTA: 'yellow',
-      CONTROL_OFICIAL: 'red',
+      REVISION_DIRECCION: 'green',
+      CONTROL_UOC: 'yellow',
+      CONTROL_ADMINISTRADOR: 'red',
     }
     return colors[etapa] || 'gray'
   }

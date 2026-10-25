@@ -279,7 +279,7 @@ class TareaCumplimientoSerializer(serializers.ModelSerializer):
     impacto_display = serializers.CharField(source='get_impacto_display', read_only=True)
     probabilidad_display = serializers.CharField(source='get_probabilidad_display', read_only=True)
     estados_disponibles = serializers.SerializerMethodField()
-    documento_autoridad_url = serializers.SerializerMethodField()
+    documento_rectorado_url = serializers.SerializerMethodField()
     
     # Add notification config field (read-only)
     notificacion_config = serializers.SerializerMethodField()
@@ -298,7 +298,7 @@ class TareaCumplimientoSerializer(serializers.ModelSerializer):
             'id', 'titulo', 'descripcion', 'clausula', 'clausula_titulo',
             'prioridad', 'prioridad_display', 'impacto', 'impacto_display', 'probabilidad', 'probabilidad_display',
             'area', 'area_nombre', 'etapa_actual', 'etapa_display', 'estado_etapa', 'estados_disponibles',
-            'fecha_remision_autoridad', 'numero_expediente_autoridad', 'documento_autoridad', 'documento_autoridad_url',
+            'fecha_remision_rectorado', 'numero_expediente_rectorado', 'documento_rectorado', 'documento_rectorado_url',
             'fecha_vencimiento', 'fecha_inicio',
             'fecha_completacion', 'responsables', 'responsables_detalle',
             'niveles_riesgo', 'niveles_riesgo_detalle',
@@ -382,10 +382,10 @@ class TareaCumplimientoSerializer(serializers.ModelSerializer):
         # Una tarea está en cumplimiento si:
         # 1. Está completada (estados finales)
         # 2. O está en progreso y no está vencida
-        estados_completados = ['VALIDADA', 'APROBADO_AUTORIDAD']
+        estados_completados = ['VALIDADA', 'APROBADO_RECTORADO']
         if obj.estado_etapa in estados_completados:
             return True
-        if obj.estado_etapa in ['EN_PROGRESO', 'REVISION_GERENCIAL', 'REVISION_ANALISTA'] and not obj.esta_vencida:
+        if obj.estado_etapa in ['EN_PROGRESO', 'REVISION_DIRECCION', 'REVISION_UOC'] and not obj.esta_vencida:
             return True
         if obj.estado_etapa == 'PENDIENTE' and not obj.esta_vencida:
             return True
@@ -396,13 +396,13 @@ class TareaCumplimientoSerializer(serializers.ModelSerializer):
         request = self.context.get('request')
         return estados_disponibles(request.user if request else None, obj)
 
-    def get_documento_autoridad_url(self, obj):
+    def get_documento_rectorado_url(self, obj):
         """Get URL for Authority document"""
         request = self.context.get('request')
-        if obj.documento_autoridad and hasattr(obj.documento_autoridad, 'url'):
+        if obj.documento_rectorado and hasattr(obj.documento_rectorado, 'url'):
             if request:
-                return request.build_absolute_uri(obj.documento_autoridad.url)
-            return obj.documento_autoridad.url
+                return request.build_absolute_uri(obj.documento_rectorado.url)
+            return obj.documento_rectorado.url
         return None
     
     def validate_responsables(self, value):
@@ -429,9 +429,9 @@ class TareaCumplimientoSerializer(serializers.ModelSerializer):
         niveles_riesgo = validated_data.pop('niveles_riesgo', [])
         area = validated_data.get('area')
         
-        # El área es opcional solo para ANALISTA_COMPLIANCE y OFICIAL_COMPLIANCE
+        # El área es opcional solo para ANALISTA_UOC y ADMINISTRADOR_CONTRATO
         user_role = request.user.role
-        if area is None and user_role not in ['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE']:
+        if area is None and user_role not in ['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO']:
             raise serializers.ValidationError({'area': 'El área es obligatoria para tu rol.'})
 
         validated_data['creado_por'] = request.user
@@ -448,11 +448,11 @@ class TareaCumplimientoSerializer(serializers.ModelSerializer):
         niveles_riesgo = validated_data.pop('niveles_riesgo', None)
         area = validated_data.get('area')
         
-        # El área es opcional solo para ANALISTA_COMPLIANCE y OFICIAL_COMPLIANCE
+        # El área es opcional solo para ANALISTA_UOC y ADMINISTRADOR_CONTRATO
         request = self.context.get('request')
         if request and 'area' in validated_data and area is None:
             user_role = request.user.role
-            if user_role not in ['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE']:
+            if user_role not in ['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO']:
                 raise serializers.ValidationError({'area': 'El área es obligatoria para tu rol.'})
 
         instance = super().update(instance, validated_data)
@@ -474,8 +474,8 @@ class TareaEstadoEtapaSerializer(serializers.Serializer):
     documento_adjunto = serializers.FileField(required=False, allow_null=True)
     
     # Campos específicos para la remisión al Rectorado
-    fecha_remision_autoridad = serializers.DateField(required=False, allow_null=True)
-    numero_expediente_autoridad = serializers.CharField(required=False, allow_blank=True, max_length=100)
+    fecha_remision_rectorado = serializers.DateField(required=False, allow_null=True)
+    numero_expediente_rectorado = serializers.CharField(required=False, allow_blank=True, max_length=100)
     
     def validate(self, data):
         """Validate state transition based on current stage and user role"""
@@ -492,9 +492,9 @@ class TareaEstadoEtapaSerializer(serializers.Serializer):
         # Validar que el estado pertenece a la etapa actual
         estados_validos_map = {
             'INICIO': [e[0] for e in TareaCumplimiento.ESTADO_ETAPA_1_CHOICES],
-            'REVISION_GERENCIAL': [e[0] for e in TareaCumplimiento.ESTADO_ETAPA_2_CHOICES],
-            'CONTROL_ANALISTA': [e[0] for e in TareaCumplimiento.ESTADO_ETAPA_3_CHOICES],
-            'CONTROL_OFICIAL': [e[0] for e in TareaCumplimiento.ESTADO_ETAPA_4_CHOICES],
+            'REVISION_DIRECCION': [e[0] for e in TareaCumplimiento.ESTADO_ETAPA_2_CHOICES],
+            'CONTROL_UOC': [e[0] for e in TareaCumplimiento.ESTADO_ETAPA_3_CHOICES],
+            'CONTROL_ADMINISTRADOR': [e[0] for e in TareaCumplimiento.ESTADO_ETAPA_4_CHOICES],
         }
         
         estados_validos = estados_validos_map.get(etapa_actual, [])
@@ -505,10 +505,10 @@ class TareaEstadoEtapaSerializer(serializers.Serializer):
         
         # Validar permisos por rol
         permisos_etapa = {
-            'INICIO': ['RESPONSABLE', 'GERENTE', 'OFICIAL_COMPLIANCE'],
-            'REVISION_GERENCIAL': ['GERENTE', 'ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE'],
-            'CONTROL_ANALISTA': ['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE'],
-            'CONTROL_OFICIAL': ['OFICIAL_COMPLIANCE'],
+            'INICIO': ['RESPONSABLE', 'DIRECTOR', 'ADMINISTRADOR_CONTRATO'],
+            'REVISION_DIRECCION': ['DIRECTOR', 'ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO'],
+            'CONTROL_UOC': ['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO'],
+            'CONTROL_ADMINISTRADOR': ['ADMINISTRADOR_CONTRATO'],
         }
         
         roles_permitidos = permisos_etapa.get(etapa_actual, [])
@@ -533,12 +533,12 @@ class TareaEstadoEtapaSerializer(serializers.Serializer):
         instance.estado_etapa = nuevo_estado
         
         # Actualizar campos de la remisión al Rectorado si aplica
-        if 'fecha_remision_autoridad' in validated_data:
-            instance.fecha_remision_autoridad = validated_data['fecha_remision_autoridad']
-        if 'numero_expediente_autoridad' in validated_data:
-            instance.numero_expediente_autoridad = validated_data['numero_expediente_autoridad']
+        if 'fecha_remision_rectorado' in validated_data:
+            instance.fecha_remision_rectorado = validated_data['fecha_remision_rectorado']
+        if 'numero_expediente_rectorado' in validated_data:
+            instance.numero_expediente_rectorado = validated_data['numero_expediente_rectorado']
         if 'documento_adjunto' in validated_data:
-            instance.documento_autoridad = documento
+            instance.documento_rectorado = documento
         
         instance.save()
         
@@ -574,10 +574,10 @@ class TareaAvanzarEtapaSerializer(serializers.Serializer):
         
         # Mapeo de transiciones de etapa
         transiciones = {
-            'INICIO': ('REVISION_GERENCIAL', ['RESPONSABLE', 'GERENTE', 'OFICIAL_COMPLIANCE']),
-            'REVISION_GERENCIAL': ('CONTROL_ANALISTA', ['GERENTE', 'ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE']),
-            'CONTROL_ANALISTA': ('CONTROL_OFICIAL', ['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE']),
-            'CONTROL_OFICIAL': (None, []),  # No hay siguiente etapa
+            'INICIO': ('REVISION_DIRECCION', ['RESPONSABLE', 'DIRECTOR', 'ADMINISTRADOR_CONTRATO']),
+            'REVISION_DIRECCION': ('CONTROL_UOC', ['DIRECTOR', 'ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO']),
+            'CONTROL_UOC': ('CONTROL_ADMINISTRADOR', ['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO']),
+            'CONTROL_ADMINISTRADOR': (None, []),  # No hay siguiente etapa
         }
         
         if etapa_actual not in transiciones:
@@ -594,9 +594,9 @@ class TareaAvanzarEtapaSerializer(serializers.Serializer):
         # Validar que el estado actual permite avanzar
         estados_que_permiten_avance = {
             'INICIO': ['EN_PROGRESO', 'REQUIERE_ATENCION', 'PENDIENTE'],
-            'REVISION_GERENCIAL': ['VALIDADO_GERENTE'],
-            'CONTROL_ANALISTA': ['PENDIENTE_VALIDACION_OFICIAL', 'EN_PROGRESO_ANALISTA'],
-            'CONTROL_OFICIAL': [],
+            'REVISION_DIRECCION': ['VALIDADO_DIRECCION'],
+            'CONTROL_UOC': ['PENDIENTE_VALIDACION_ADMIN', 'EN_PROGRESO_UOC'],
+            'CONTROL_ADMINISTRADOR': [],
         }
         
         estados_permitidos = estados_que_permiten_avance.get(etapa_actual, [])
@@ -619,9 +619,9 @@ class TareaAvanzarEtapaSerializer(serializers.Serializer):
         
         # Mapeo de estado inicial por etapa
         estados_iniciales = {
-            'REVISION_GERENCIAL': 'REVISION_GERENCIAL',
-            'CONTROL_ANALISTA': 'REVISION_ANALISTA',
-            'CONTROL_OFICIAL': 'PENDIENTE_VALIDACION',
+            'REVISION_DIRECCION': 'REVISION_DIRECCION',
+            'CONTROL_UOC': 'REVISION_UOC',
+            'CONTROL_ADMINISTRADOR': 'PENDIENTE_VALIDACION',
         }
         
         estado_inicial = estados_iniciales.get(siguiente_etapa, 'PENDIENTE')
@@ -712,9 +712,9 @@ class TareaCreateSerializer(serializers.ModelSerializer):
         notificacion_config_data = validated_data.pop('notificacion_config', None)
         area = validated_data.get('area')
         
-        # El área es opcional solo para ANALISTA_COMPLIANCE y OFICIAL_COMPLIANCE
+        # El área es opcional solo para ANALISTA_UOC y ADMINISTRADOR_CONTRATO
         user_role = request.user.role
-        if area is None and user_role not in ['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE']:
+        if area is None and user_role not in ['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO']:
             raise serializers.ValidationError({'area': 'El área es obligatoria para tu rol.'})
 
         validated_data['creado_por'] = request.user
@@ -770,7 +770,7 @@ class TareaCambiarEtapaDirectoSerializer(serializers.Serializer):
         user = request.user
         
         # Solo Oficial de Compliance puede cambiar etapas directamente
-        if user.role != "OFICIAL_COMPLIANCE":
+        if user.role != "ADMINISTRADOR_CONTRATO":
             raise serializers.ValidationError(
                 "Solo el/la Administrador/a de Contrato puede cambiar directamente la etapa de una tarea"
             )
@@ -781,9 +781,9 @@ class TareaCambiarEtapaDirectoSerializer(serializers.Serializer):
         
         estados_validos_por_etapa = {
             "INICIO": [choice[0] for choice in TareaCumplimiento.ESTADO_ETAPA_1_CHOICES],
-            "REVISION_GERENCIAL": [choice[0] for choice in TareaCumplimiento.ESTADO_ETAPA_2_CHOICES],
-            "CONTROL_ANALISTA": [choice[0] for choice in TareaCumplimiento.ESTADO_ETAPA_3_CHOICES],
-            "CONTROL_OFICIAL": [choice[0] for choice in TareaCumplimiento.ESTADO_ETAPA_4_CHOICES],
+            "REVISION_DIRECCION": [choice[0] for choice in TareaCumplimiento.ESTADO_ETAPA_2_CHOICES],
+            "CONTROL_UOC": [choice[0] for choice in TareaCumplimiento.ESTADO_ETAPA_3_CHOICES],
+            "CONTROL_ADMINISTRADOR": [choice[0] for choice in TareaCumplimiento.ESTADO_ETAPA_4_CHOICES],
         }
         
         estados_validos = estados_validos_por_etapa.get(etapa_destino, [])
@@ -870,8 +870,8 @@ class PresentacionCreateSerializer(serializers.Serializer):
         if not request or not request.user.is_authenticated:
             raise serializers.ValidationError('Authentication required')
         
-        # Solo OFICIAL_COMPLIANCE puede archivar presentaciones
-        if request.user.role != 'OFICIAL_COMPLIANCE':
+        # Solo ADMINISTRADOR_CONTRATO puede archivar presentaciones
+        if request.user.role != 'ADMINISTRADOR_CONTRATO':
             raise serializers.ValidationError(
                 'Solo el/la Administrador/a de Contrato puede archivar presentaciones'
             )
@@ -910,9 +910,9 @@ class PresentacionCreateSerializer(serializers.Serializer):
         # Determinar estado inicial según la etapa destino
         estados_iniciales = {
             'INICIO': 'PENDIENTE',
-            'REVISION_GERENCIAL': 'REVISION_GERENCIAL',
-            'CONTROL_ANALISTA': 'REVISION_ANALISTA',
-            'CONTROL_OFICIAL': 'PENDIENTE_VALIDACION',
+            'REVISION_DIRECCION': 'REVISION_DIRECCION',
+            'CONTROL_UOC': 'REVISION_UOC',
+            'CONTROL_ADMINISTRADOR': 'PENDIENTE_VALIDACION',
         }
         
         estado_destino = estados_iniciales.get(etapa_destino, 'PENDIENTE')
