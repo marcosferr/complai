@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fetchHistorialEstados } from '@/store/slices/tareasSlice'
+import { getEstadoEtapaLabel, getEtapaLabel, getRoleLabel } from '@/lib/estadoEtapaConstants'
 
 const TaskStateHistory = ({ tareaId }) => {
   const dispatch = useDispatch()
@@ -102,7 +103,7 @@ const TaskStateHistory = ({ tareaId }) => {
                     <div className="flex flex-wrap items-center gap-2 mb-2">
                       {item.etapa_anterior && (
                         <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-${getEtapaColor(item.etapa_anterior)}-100 text-${getEtapaColor(item.etapa_anterior)}-800`}>
-                          {item.etapa_display_anterior || item.etapa_anterior}
+                          {item.etapa_display_anterior || getEtapaLabel(item.etapa_anterior)}
                         </span>
                       )}
                       
@@ -111,16 +112,16 @@ const TaskStateHistory = ({ tareaId }) => {
                       )}
                       
                       <span className={`inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-${getEtapaColor(item.etapa_nueva)}-100 text-${getEtapaColor(item.etapa_nueva)}-800`}>
-                        {item.etapa_display_nueva || item.etapa_nueva}
+                        {item.etapa_display_nueva || getEtapaLabel(item.etapa_nueva)}
                       </span>
                     </div>
 
                     {/* Estado cambio */}
                     {item.estado_anterior !== item.estado_nuevo && (
                       <div className="text-sm text-gray-600 mb-1">
-                        <span className="text-gray-400">{item.estado_anterior}</span>
+                        <span className="text-gray-400">{getEstadoEtapaLabel(item.estado_anterior)}</span>
                         <span className="material-icons inline mx-2 text-gray-400 text-sm align-middle">arrow_forward</span>
-                        <span className="font-medium text-gray-700">{item.estado_nuevo}</span>
+                        <span className="font-medium text-gray-700">{getEstadoEtapaLabel(item.estado_nuevo)}</span>
                       </div>
                     )}
                   </div>
@@ -138,7 +139,7 @@ const TaskStateHistory = ({ tareaId }) => {
                   <span className="font-medium">{item.usuario_nombre}</span>
                   <span className="mx-2 text-gray-400">•</span>
                   <span className="text-xs px-2 py-0.5 bg-gray-100 rounded">
-                    {item.rol_usuario_display || item.rol_usuario}
+                    {item.rol_usuario_display || getRoleLabel(item.rol_usuario)}
                   </span>
                 </div>
 

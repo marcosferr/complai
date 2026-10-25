@@ -9,6 +9,7 @@ import {
 } from '@/store/slices/tareasSlice'
 import { showNotification } from '@/store/slices/uiSlice'
 import AvanzarEtapaButton from './AvanzarEtapaButton'
+import { ETAPA_LABELS, ETAPAS_ORDENADAS, TODOS_ESTADOS_ETAPAS, getEstadoEtapaLabel } from '@/lib/estadoEtapaConstants'
 
 const TaskEtapasControl = ({ tarea, onUpdate }) => {
   const dispatch = useDispatch()
@@ -27,7 +28,7 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
   const [etapaDestino, setEtapaDestino] = useState('')
   const [estadoDestino, setEstadoDestino] = useState('')
   
-  // Datos de la Autoridad
+  // Datos del Rectorado
   const [fechaRemisionAutoridad, setFechaRemisionAutoridad] = useState('')
   const [numeroExpedienteAutoridad, setNumeroExpedienteAutoridad] = useState('')
   const [documentoAutoridad, setDocumentoAutoridad] = useState(null)
@@ -158,7 +159,7 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
       })).unwrap()
 
       dispatch(showNotification({
-        message: 'Remisión a la Autoridad registrada exitosamente',
+        message: 'Remisión al Rectorado registrada exitosamente',
         type: 'success',
       }))
 
@@ -167,7 +168,7 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
       onUpdate && onUpdate()
     } catch (error) {
       dispatch(showNotification({
-        message: error.message || 'Error al registrar remisión a la Autoridad',
+        message: error.message || 'Error al registrar remisión al Rectorado',
         type: 'error',
       }))
     }
@@ -268,9 +269,9 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
 
   const getSiguienteEtapa = () => {
     const etapas = {
-      'INICIO': 'Revisión Gerencial',
-      'REVISION_GERENCIAL': 'Control del Analista',
-      'CONTROL_ANALISTA': 'Control Oficial',
+      'INICIO': ETAPA_LABELS.REVISION_GERENCIAL,
+      'REVISION_GERENCIAL': ETAPA_LABELS.CONTROL_ANALISTA,
+      'CONTROL_ANALISTA': ETAPA_LABELS.CONTROL_OFICIAL,
       'CONTROL_OFICIAL': null,
     }
     return etapas[tarea?.etapa_actual]
@@ -310,7 +311,7 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
               Estado
             </label>
             <span className="inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium bg-gray-100 text-gray-800">
-              {tarea.estado_etapa}
+              {tarea.estado_etapa_display || getEstadoEtapaLabel(tarea.estado_etapa)}
             </span>
           </div>
         </div>
@@ -377,18 +378,18 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
               className="flex items-center gap-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors"
             >
               <span className="material-icons text-sm">send</span>
-              Registrar Remisión a la Autoridad
+              Registrar Remisión al Rectorado
             </button>
           )}
         </div>
       </div>
 
-      {/* Información de la Autoridad (si existe) */}
+      {/* Información del Rectorado (si existe) */}
       {tarea.fecha_remision_autoridad && (
         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
           <h4 className="font-medium text-blue-900 mb-2 flex items-center gap-2">
             <span className="material-icons text-base">send</span>
-            Información de la Autoridad
+            Información del Rectorado
           </h4>
           <div className="space-y-1 text-sm text-blue-800">
             <p><strong>Fecha de remisión:</strong> {new Date(tarea.fecha_remision_autoridad).toLocaleDateString('es-PY')}</p>
@@ -402,7 +403,7 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
                 rel="noopener noreferrer"
                 className="inline-flex items-center text-blue-600 hover:text-blue-800 hover:underline"
               >
-                Ver documento de la Autoridad
+                Ver documento del Rectorado
               </a>
             )}
           </div>
@@ -519,13 +520,13 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
         </div>
       )}
 
-      {/* Modal: Registrar remisión a la Autoridad */}
+      {/* Modal: Registrar remisión al Rectorado */}
       {showAutoridadModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg max-w-md w-full p-6">
             <h3 className="text-lg font-semibold mb-4 flex items-center gap-2 text-red-600">
               <span className="material-icons">send</span>
-              Registrar Remisión a la Autoridad
+              Registrar Remisión al Rectorado
             </h3>
             <form onSubmit={handleRegistrarAutoridad}>
               <div className="mb-4">
@@ -556,7 +557,7 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
 
               <div className="mb-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Documento de la Autoridad (opcional)
+                  Documento del Rectorado (opcional)
                 </label>
                 <input
                   type="file"
@@ -588,7 +589,7 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
         </div>
       )}
 
-      {/* Modal Cambiar Etapa Directo (Oficial Compliance) */}
+      {/* Modal Cambiar Etapa Directo (Administrador/a de Contrato) */}
       {showCambiarEtapaModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white rounded-lg p-6 max-w-md w-full max-h-[90vh] overflow-y-auto">
@@ -622,10 +623,9 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
                   required
                 >
                   <option value="">Seleccionar etapa...</option>
-                  <option value="INICIO">Pendientes</option>
-                  <option value="REVISION_GERENCIAL">En Progreso</option>
-                  <option value="CONTROL_ANALISTA">Requieren Atención</option>
-                  <option value="CONTROL_OFICIAL">En Cumplimiento</option>
+                  {ETAPAS_ORDENADAS.map(e => (
+                    <option key={e} value={e}>{ETAPA_LABELS[e]}</option>
+                  ))}
                 </select>
               </div>
 
@@ -641,33 +641,9 @@ const TaskEtapasControl = ({ tarea, onUpdate }) => {
                   disabled={!etapaDestino}
                 >
                   <option value="">Seleccionar estado...</option>
-                  {etapaDestino === 'INICIO' && (
-                    <>
-                      <option value="PENDIENTE">Pendiente</option>
-                      <option value="REQUIERE_ATENCION">Requiere Atención</option>
-                    </>
-                  )}
-                  {etapaDestino === 'REVISION_GERENCIAL' && (
-                    <>
-                      <option value="REVISION_GERENCIAL">En Revisión Gerencial</option>
-                      <option value="APROBADA">Aprobada</option>
-                      <option value="RECHAZADA">Rechazada</option>
-                    </>
-                  )}
-                  {etapaDestino === 'CONTROL_ANALISTA' && (
-                    <>
-                      <option value="CONTROL">En Control</option>
-                      <option value="VALIDADA">Validada</option>
-                      <option value="OBSERVADA">Observada</option>
-                    </>
-                  )}
-                  {etapaDestino === 'CONTROL_OFICIAL' && (
-                    <>
-                      <option value="VALIDADA">Validada</option>
-                      <option value="FINALIZADA">Finalizada</option>
-                      <option value="REMITIDA_AUTORIDAD">Remitida a la Autoridad</option>
-                    </>
-                  )}
+                  {(TODOS_ESTADOS_ETAPAS[etapaDestino] || []).map(e => (
+                    <option key={e.key} value={e.key}>{e.label}</option>
+                  ))}
                 </select>
               </div>
 

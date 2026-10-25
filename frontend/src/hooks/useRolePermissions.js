@@ -1,6 +1,7 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { TODOS_ESTADOS_ETAPAS } from '@/lib/estadoEtapaConstants'
+import { ETAPA_LABELS } from '@/lib/estadoEtapaConstants'
 
 /**
  * Hook personalizado para manejar permisos y filtros basados en el rol del usuario
@@ -33,7 +34,7 @@ export const useRolePermissions = () => {
           canEditArea: false,
           canDeleteClausulas: false,
           canDeleteTareas: false,
-          canCreateTareas: false, // Solo Analista y Oficial pueden crear obligaciones
+          canCreateTareas: false, // Solo la UOC y el/la Administrador/a crean obligaciones
           canEditObligacion: false, // No puede corregir título ni fecha de vencimiento
           areaRequiredInTasks: true, // El área es requerida
         }
@@ -53,7 +54,7 @@ export const useRolePermissions = () => {
           canEditArea: false,
           canDeleteClausulas: false,
           canDeleteTareas: false,
-          canCreateTareas: false, // Solo Analista y Oficial pueden crear obligaciones
+          canCreateTareas: false, // Solo la UOC y el/la Administrador/a crean obligaciones
           canEditObligacion: false, // No puede corregir título ni fecha de vencimiento
           areaRequiredInTasks: true, // El área es requerida
         }
@@ -131,24 +132,24 @@ export const useRolePermissions = () => {
         // Solo INICIO y REVISION_GERENCIAL
         return [
           { value: 'INICIO', label: 'Inicio' },
-          { value: 'REVISION_GERENCIAL', label: 'Revisión Gerencial' }
+          { value: 'REVISION_GERENCIAL', label: ETAPA_LABELS.REVISION_GERENCIAL }
         ]
       
       case 'ANALISTA_COMPLIANCE':
         // Hasta CONTROL_ANALISTA (no ve CONTROL_OFICIAL)
         return [
           { value: 'INICIO', label: 'Inicio' },
-          { value: 'REVISION_GERENCIAL', label: 'Revisión Gerencial' },
-          { value: 'CONTROL_ANALISTA', label: 'Control Analista' }
+          { value: 'REVISION_GERENCIAL', label: ETAPA_LABELS.REVISION_GERENCIAL },
+          { value: 'CONTROL_ANALISTA', label: ETAPA_LABELS.CONTROL_ANALISTA }
         ]
       
       case 'OFICIAL_COMPLIANCE':
         // Todas las etapas
         return [
           { value: 'INICIO', label: 'Inicio' },
-          { value: 'REVISION_GERENCIAL', label: 'Revisión Gerencial' },
-          { value: 'CONTROL_ANALISTA', label: 'Control Analista' },
-          { value: 'CONTROL_OFICIAL', label: 'Control Oficial' }
+          { value: 'REVISION_GERENCIAL', label: ETAPA_LABELS.REVISION_GERENCIAL },
+          { value: 'CONTROL_ANALISTA', label: ETAPA_LABELS.CONTROL_ANALISTA },
+          { value: 'CONTROL_OFICIAL', label: ETAPA_LABELS.CONTROL_OFICIAL }
         ]
       
       default:

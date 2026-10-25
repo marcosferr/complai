@@ -473,7 +473,7 @@ class TareaEstadoEtapaSerializer(serializers.Serializer):
     observaciones = serializers.CharField(required=False, allow_blank=True)
     documento_adjunto = serializers.FileField(required=False, allow_null=True)
     
-    # Campos específicos para la Autoridad
+    # Campos específicos para la remisión al Rectorado
     fecha_remision_autoridad = serializers.DateField(required=False, allow_null=True)
     numero_expediente_autoridad = serializers.CharField(required=False, allow_blank=True, max_length=100)
     
@@ -532,7 +532,7 @@ class TareaEstadoEtapaSerializer(serializers.Serializer):
         # Actualizar estado de la tarea
         instance.estado_etapa = nuevo_estado
         
-        # Actualizar campos específicos de la Autoridad si aplica
+        # Actualizar campos de la remisión al Rectorado si aplica
         if 'fecha_remision_autoridad' in validated_data:
             instance.fecha_remision_autoridad = validated_data['fecha_remision_autoridad']
         if 'numero_expediente_autoridad' in validated_data:
@@ -589,7 +589,7 @@ class TareaAvanzarEtapaSerializer(serializers.Serializer):
             raise serializers.ValidationError('La tarea ya está en la última etapa')
         
         if user.role not in roles_permitidos:
-            raise serializers.ValidationError(f'No tienes permisos para avanzar desde la etapa {etapa_actual}')
+            raise serializers.ValidationError(f'No tenés permisos para avanzar desde la etapa {dict(TareaCumplimiento.ETAPA_CHOICES).get(etapa_actual, etapa_actual)}')
         
         # Validar que el estado actual permite avanzar
         estados_que_permiten_avance = {
@@ -640,7 +640,7 @@ class TareaAvanzarEtapaSerializer(serializers.Serializer):
             estado_nuevo=estado_inicial,
             usuario=user,
             rol_usuario=user.role if user else '',
-            observaciones=observaciones or f'Avance de {etapa_anterior} a {siguiente_etapa}'
+            observaciones=observaciones or f'Avance de {dict(TareaCumplimiento.ETAPA_CHOICES)[etapa_anterior]} a {dict(TareaCumplimiento.ETAPA_CHOICES)[siguiente_etapa]}'
         )
         
         return instance
@@ -772,7 +772,7 @@ class TareaCambiarEtapaDirectoSerializer(serializers.Serializer):
         # Solo Oficial de Compliance puede cambiar etapas directamente
         if user.role != "OFICIAL_COMPLIANCE":
             raise serializers.ValidationError(
-                "Solo el Oficial de Compliance puede cambiar directamente la etapa de una tarea"
+                "Solo el/la Administrador/a de Contrato puede cambiar directamente la etapa de una tarea"
             )
         
         # Validar que el estado destino sea válido para la etapa destino
@@ -820,7 +820,7 @@ class TareaCambiarEtapaDirectoSerializer(serializers.Serializer):
             estado_nuevo=estado_destino,
             usuario=user,
             rol_usuario=user.role if user else "",
-            observaciones=observaciones or f"Cambio directo de etapa por Oficial de Compliance"
+            observaciones=observaciones or f"Cambio directo de etapa por el/la Administrador/a de Contrato"
         )
         
         return instance
@@ -873,7 +873,7 @@ class PresentacionCreateSerializer(serializers.Serializer):
         # Solo OFICIAL_COMPLIANCE puede archivar presentaciones
         if request.user.role != 'OFICIAL_COMPLIANCE':
             raise serializers.ValidationError(
-                'Solo el Oficial de Compliance puede archivar presentaciones'
+                'Solo el/la Administrador/a de Contrato puede archivar presentaciones'
             )
         
         return data
@@ -934,7 +934,7 @@ class PresentacionCreateSerializer(serializers.Serializer):
             estado_nuevo=estado_destino,
             usuario=request.user,
             rol_usuario=request.user.role,
-            observaciones=f"Tarea movida a etapa {etapa_destino} tras archivar presentación '{presentacion.nombre}'"
+            observaciones=f"Obligación movida a {dict(TareaCumplimiento.ETAPA_CHOICES).get(etapa_destino, etapa_destino)} tras archivar la presentación '{presentacion.nombre}'"
         )
         
         return presentacion

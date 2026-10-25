@@ -2006,7 +2006,7 @@ const TaskDetailModal = ({ isOpen, onClose, tarea, onUpdate }) => {
                       Las notificaciones se envían automáticamente a las 9:00 AM según los intervalos configurados.
                     </p>
                     <p>
-                      Los responsables, gerentes del área, analistas y oficiales de compliance reciben las notificaciones.
+                      Reciben las notificaciones los responsables técnicos, la Dirección de la dependencia, la UOC y el/la Administrador/a de Contrato.
                     </p>
                   </div>
                 </div>

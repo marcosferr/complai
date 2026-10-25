@@ -7,8 +7,8 @@
 
 Antes el endpoint solo miraba si el rol podía tocar la etapa actual y después aceptaba
 cualquier estado de cualquier etapa (un Responsable podía pasar su obligación a
-«Aprobado por la Autoridad»). Pasar de etapa es trabajo de «Avanzar etapa» y «Devolver con
-observaciones», que tienen sus propias reglas; el Oficial de Compliance es la única excepción.
+«Aprobado por el Rectorado»). Pasar de etapa es trabajo de «Avanzar etapa» y «Devolver con
+observaciones», que tienen sus propias reglas; el/la Administrador/a de Contrato es la única excepción.
 """
 
 ESTADOS_POR_ETAPA = {
@@ -16,26 +16,26 @@ ESTADOS_POR_ETAPA = {
         ('PENDIENTE', 'Pendiente'),
         ('EN_PROGRESO', 'En Progreso'),
         ('REQUIERE_ATENCION', 'Requiere Atención'),
-        ('OBSERVADO_GERENTE', 'Devuelto con Observaciones del Gerente'),
+        ('OBSERVADO_GERENTE', 'Devuelto con Observaciones de la Dirección'),
     ],
     'REVISION_GERENCIAL': [
-        ('REVISION_GERENCIAL', 'Revisión Gerencial'),
-        ('VALIDADO_GERENTE', 'Validado por Gerente'),
-        ('OBSERVADO_ANALISTA', 'Con Observaciones del Analista'),
+        ('REVISION_GERENCIAL', 'En Revisión de la Dirección'),
+        ('VALIDADO_GERENTE', 'Validado por la Dirección'),
+        ('OBSERVADO_ANALISTA', 'Con Observaciones de la UOC'),
     ],
     'CONTROL_ANALISTA': [
-        ('REVISION_ANALISTA', 'En Revisión del Analista'),
-        ('EN_PROGRESO_ANALISTA', 'En Progreso Analista'),
-        ('OBSERVADO_OFICIAL', 'Devuelto con Observaciones del Oficial'),
-        ('PENDIENTE_VALIDACION_OFICIAL', 'Listo para Validación Oficial'),
+        ('REVISION_ANALISTA', 'En Revisión de la UOC'),
+        ('EN_PROGRESO_ANALISTA', 'En Progreso (UOC)'),
+        ('OBSERVADO_OFICIAL', 'Devuelto con Observaciones del Administrador'),
+        ('PENDIENTE_VALIDACION_OFICIAL', 'Listo para Validación del Administrador'),
     ],
     'CONTROL_OFICIAL': [
         ('PENDIENTE_VALIDACION', 'Pendiente Validación'),
         ('VALIDADA', 'Validada'),
-        ('REMITIDO_AUTORIDAD', 'Remitido a la Autoridad'),
-        ('OBSERVADO_AUTORIDAD', 'Observado por la Autoridad'),
-        ('APROBADO_AUTORIDAD', '✅ Aprobado por la Autoridad'),
-        ('RECHAZADO_AUTORIDAD', '❌ Rechazado por la Autoridad'),
+        ('REMITIDO_AUTORIDAD', 'Remitido al Rectorado'),
+        ('OBSERVADO_AUTORIDAD', 'Observado por el Rectorado'),
+        ('APROBADO_AUTORIDAD', '✅ Aprobado por el Rectorado'),
+        ('RECHAZADO_AUTORIDAD', '❌ Rechazado por el Rectorado'),
     ],
 }
 

@@ -42,7 +42,7 @@ const AreaModal = ({ isOpen, onClose, onSuccess }) => {
     const newErrors = {}
     
     if (!formData.nombre.trim()) {
-      newErrors.nombre = 'El nombre del area/gerencia es requerido'
+      newErrors.nombre = 'El nombre de la dependencia es obligatorio'
     }
     
     return newErrors
@@ -61,7 +61,7 @@ const AreaModal = ({ isOpen, onClose, onSuccess }) => {
     try {
       const response = await areaService.createArea(formData)
       dispatch(showNotification({ 
-        message: 'Area/Gerencia creada exitosamente', 
+        message: 'Dependencia creada exitosamente', 
         type: 'success' 
       }))
       onSuccess && onSuccess(response.data)
@@ -72,7 +72,7 @@ const AreaModal = ({ isOpen, onClose, onSuccess }) => {
         setErrors(errorData)
       } else {
         dispatch(showNotification({ 
-          message: errorData || 'Error al crear area/gerencia', 
+          message: errorData || 'Error al crear la dependencia', 
           type: 'error' 
         }))
       }
@@ -89,7 +89,7 @@ const AreaModal = ({ isOpen, onClose, onSuccess }) => {
         <div className="p-6">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
-              Nueva Area/Gerencia
+              Nueva Dependencia
             </h2>
             <button
               onClick={onClose}
@@ -106,14 +106,14 @@ const AreaModal = ({ isOpen, onClose, onSuccess }) => {
             {/* Nombre */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Nombre del Area/Gerencia *
+                Nombre de la Dependencia *
               </label>
               <input
                 type="text"
                 name="nombre"
                 value={formData.nombre}
                 onChange={handleChange}
-                placeholder="Ej: Recursos Humanos, Legal, IT"
+                placeholder="Ej: Facultad de Ingeniería, Dirección de Infraestructura, UOC"
                 className={`w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white ${
                   errors.nombre ? 'border-red-500' : 'border-gray-300'
                 }`}
@@ -134,7 +134,7 @@ const AreaModal = ({ isOpen, onClose, onSuccess }) => {
                 value={formData.descripcion}
                 onChange={handleChange}
                 rows={3}
-                placeholder="Breve descripción del area/gerencia (opcional)"
+                placeholder="Breve descripción de la dependencia (opcional)"
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 disabled={loading}
               />

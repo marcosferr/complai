@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { showNotification } from '@/store/slices/uiSlice'
 import tareaService from '@/services/tareaService'
+import { ETAPA_LABELS, ETAPAS_ORDENADAS } from '@/lib/estadoEtapaConstants'
 
 const ArchivarPresentacionModal = ({ isOpen, onClose, tareaId, onSuccess }) => {
     const dispatch = useDispatch()
@@ -132,10 +133,9 @@ const ArchivarPresentacionModal = ({ isOpen, onClose, tareaId, onSuccess }) => {
                             className="w-full px-3 py-2 border border-border-light dark:border-border-dark rounded-lg bg-surface-light dark:bg-surface-dark text-text-light dark:text-text-dark focus:ring-2 focus:ring-primary focus:border-transparent"
                             disabled={loading}
                         >
-                            <option value="INICIO">Inicio (Pendiente)</option>
-                            <option value="REVISION_GERENCIAL">Revisión Gerencial</option>
-                            <option value="CONTROL_ANALISTA">Control de Analista</option>
-                            <option value="CONTROL_OFICIAL">Control Oficial</option>
+                            {ETAPAS_ORDENADAS.map(e => (
+                                <option key={e} value={e}>{ETAPA_LABELS[e]}</option>
+                            ))}
                         </select>
                         <p className="text-xs text-subtle-light dark:text-subtle-dark mt-1">
                             La tarea se moverá a esta etapa después de archivar.

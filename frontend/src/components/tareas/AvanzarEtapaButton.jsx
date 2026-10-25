@@ -2,6 +2,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { avanzarEtapaTarea } from '@/store/slices/tareasSlice'
 import { showNotification } from '@/store/slices/uiSlice'
+import { ETAPA_LABELS } from '@/lib/estadoEtapaConstants'
 
 const AvanzarEtapaButton = ({ tarea, onUpdate, className = '', variant = 'primary' }) => {
   const dispatch = useDispatch()
@@ -36,9 +37,9 @@ const AvanzarEtapaButton = ({ tarea, onUpdate, className = '', variant = 'primar
 
   const getSiguienteEtapa = () => {
     const etapas = {
-      'INICIO': { nombre: 'Revisión Gerencial', codigo: 'REVISION_GERENCIAL' },
-      'REVISION_GERENCIAL': { nombre: 'Control del Analista', codigo: 'CONTROL_ANALISTA' },
-      'CONTROL_ANALISTA': { nombre: 'Control Oficial', codigo: 'CONTROL_OFICIAL' },
+      'INICIO': { nombre: ETAPA_LABELS.REVISION_GERENCIAL, codigo: 'REVISION_GERENCIAL' },
+      'REVISION_GERENCIAL': { nombre: ETAPA_LABELS.CONTROL_ANALISTA, codigo: 'CONTROL_ANALISTA' },
+      'CONTROL_ANALISTA': { nombre: ETAPA_LABELS.CONTROL_OFICIAL, codigo: 'CONTROL_OFICIAL' },
       'CONTROL_OFICIAL': null,
     }
     return etapas[tarea?.etapa_actual]

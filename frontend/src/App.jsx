@@ -76,7 +76,7 @@ function App() {
             <Route path="/calendario" element={<Calendar />} />
             <Route path="/notificaciones" element={<NotificacionesPage />} />
             
-            {/* Documents - Oficial, Analista y Gerente */}
+            {/* Documents - Administrador/a, UOC y Dirección */}
             <Route 
               path="/documentos" 
               element={
@@ -102,7 +102,7 @@ function App() {
               } 
             />
             
-            {/* Audits - Oficial, Analista y Gerente */}
+            {/* Audits - Administrador/a, UOC y Dirección */}
             <Route 
               path="/auditorias" 
               element={
@@ -112,7 +112,7 @@ function App() {
               } 
             />
             
-            {/* User Management - Oficial, Analista y Gerente */}
+            {/* User Management - Administrador/a, UOC y Dirección */}
             <Route 
               path="/usuarios" 
               element={
