@@ -159,18 +159,18 @@ export const devolverConObservaciones = (tareaId, data) => {
 }
 
 // Registrar remisión al Rectorado (solo Administrador/a de Contrato)
-export const registrarRemisionAutoridad = (tareaId, data) => {
-  // data: { fecha_remision_autoridad, numero_expediente_autoridad?, documento_autoridad? }
+export const registrarRemisionRectorado = (tareaId, data) => {
+  // data: { fecha_remision_rectorado, numero_expediente_rectorado?, documento_rectorado? }
   const formData = new FormData()
-  formData.append('fecha_remision_autoridad', data.fecha_remision_autoridad)
-  if (data.numero_expediente_autoridad) {
-    formData.append('numero_expediente_autoridad', data.numero_expediente_autoridad)
+  formData.append('fecha_remision_rectorado', data.fecha_remision_rectorado)
+  if (data.numero_expediente_rectorado) {
+    formData.append('numero_expediente_rectorado', data.numero_expediente_rectorado)
   }
-  if (data.documento_autoridad) {
-    formData.append('documento_autoridad', data.documento_autoridad)
+  if (data.documento_rectorado) {
+    formData.append('documento_rectorado', data.documento_rectorado)
   }
 
-  return api.post(`/tareas/${tareaId}/remision-autoridad/`, formData, {
+  return api.post(`/tareas/${tareaId}/remision-rectorado/`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data'
     }
@@ -259,7 +259,7 @@ export default {
   cambiarEstadoEtapa,
   avanzarEtapa,
   devolverConObservaciones,
-  registrarRemisionAutoridad,
+  registrarRemisionRectorado,
   obtenerHistorial,
   obtenerEstadisticas,
   cambiarEtapaDirecto,

@@ -44,9 +44,9 @@ class TareaCumplimiento(models.Model):
     # Etapas del flujo de compliance
     ETAPA_CHOICES = [
         ('INICIO', 'Inicio'),
-        ('REVISION_GERENCIAL', 'Revisión de la Dirección'),
-        ('CONTROL_ANALISTA', 'Control de la UOC'),
-        ('CONTROL_OFICIAL', 'Control del Administrador'),
+        ('REVISION_DIRECCION', 'Revisión de la Dirección'),
+        ('CONTROL_UOC', 'Control de la UOC'),
+        ('CONTROL_ADMINISTRADOR', 'Control del Administrador'),
     ]
 
     # Estados por etapa - Etapa 1: Inicio (Responsable Técnico)
@@ -54,32 +54,32 @@ class TareaCumplimiento(models.Model):
         ('PENDIENTE', 'Pendiente'),
         ('EN_PROGRESO', 'En Progreso'),
         ('REQUIERE_ATENCION', 'Requiere Atención'),
-        ('OBSERVADO_GERENTE', 'Devuelto con Observaciones de la Dirección'),
+        ('OBSERVADO_DIRECCION', 'Devuelto con Observaciones de la Dirección'),
     ]
 
     # Estados por etapa - Etapa 2: Revisión de la Dirección (Director/a de la dependencia)
     ESTADO_ETAPA_2_CHOICES = [
-        ('REVISION_GERENCIAL', 'En Revisión de la Dirección'),
-        ('VALIDADO_GERENTE', 'Validado por la Dirección'),
-        ('OBSERVADO_ANALISTA', 'Con Observaciones de la UOC'),
+        ('REVISION_DIRECCION', 'En Revisión de la Dirección'),
+        ('VALIDADO_DIRECCION', 'Validado por la Dirección'),
+        ('OBSERVADO_UOC', 'Con Observaciones de la UOC'),
     ]
 
     # Estados por etapa - Etapa 3: Control de la UOC
     ESTADO_ETAPA_3_CHOICES = [
-        ('REVISION_ANALISTA', 'En Revisión de la UOC'),
-        ('EN_PROGRESO_ANALISTA', 'En Progreso (UOC)'),
-        ('OBSERVADO_OFICIAL', 'Devuelto con Observaciones del Administrador'),
-        ('PENDIENTE_VALIDACION_OFICIAL', 'Pendiente Validación del Administrador'),
+        ('REVISION_UOC', 'En Revisión de la UOC'),
+        ('EN_PROGRESO_UOC', 'En Progreso (UOC)'),
+        ('OBSERVADO_ADMINISTRADOR', 'Devuelto con Observaciones del Administrador'),
+        ('PENDIENTE_VALIDACION_ADMIN', 'Pendiente Validación del Administrador'),
     ]
 
     # Estados por etapa - Etapa 4: Control del Administrador/a de Contrato
     ESTADO_ETAPA_4_CHOICES = [
         ('PENDIENTE_VALIDACION', 'Pendiente Validación'),
         ('VALIDADA', 'Validada'),
-        ('REMITIDO_AUTORIDAD', 'Remitido al Rectorado'),
-        ('OBSERVADO_AUTORIDAD', 'Observado por el Rectorado'),
-        ('APROBADO_AUTORIDAD', 'Aprobado por el Rectorado'),
-        ('RECHAZADO_AUTORIDAD', 'Rechazado por el Rectorado'),
+        ('REMITIDO_RECTORADO', 'Remitido al Rectorado'),
+        ('OBSERVADO_RECTORADO', 'Observado por el Rectorado'),
+        ('APROBADO_RECTORADO', 'Aprobado por el Rectorado'),
+        ('RECHAZADO_RECTORADO', 'Rechazado por el Rectorado'),
     ]
 
     PRIORIDAD_CHOICES = [
@@ -135,18 +135,18 @@ class TareaCumplimiento(models.Model):
     )
     
     # Campos específicos para la remisión al Rectorado (máxima autoridad)
-    fecha_remision_autoridad = models.DateField(
+    fecha_remision_rectorado = models.DateField(
         null=True,
         blank=True,
         verbose_name='Fecha Remisión al Rectorado'
     )
-    numero_expediente_autoridad = models.CharField(
+    numero_expediente_rectorado = models.CharField(
         max_length=100,
         blank=True,
         verbose_name='Número de Expediente del Rectorado'
     )
-    documento_autoridad = models.FileField(
-        upload_to='tareas/autoridad/',
+    documento_rectorado = models.FileField(
+        upload_to='tareas/rectorado/',
         null=True,
         blank=True,
         verbose_name='Documento del Rectorado',
@@ -230,8 +230,8 @@ class TareaCumplimiento(models.Model):
     @property
     def esta_vencida(self):
         """Check if task is overdue"""
-        # Task is not overdue if completed (APROBADO_AUTORIDAD or in final stages)
-        estados_completados = ['VALIDADA', 'APROBADO_AUTORIDAD']
+        # Task is not overdue if completed (APROBADO_RECTORADO or in final stages)
+        estados_completados = ['VALIDADA', 'APROBADO_RECTORADO']
         if self.estado_etapa not in estados_completados:
             if self.fecha_vencimiento:
                 return timezone.now().date() > self.fecha_vencimiento
@@ -240,7 +240,7 @@ class TareaCumplimiento(models.Model):
     @property
     def dias_restantes(self):
         """Calculate days remaining until due date"""
-        estados_completados = ['VALIDADA', 'APROBADO_AUTORIDAD']
+        estados_completados = ['VALIDADA', 'APROBADO_RECTORADO']
         if self.estado_etapa not in estados_completados and self.fecha_vencimiento:
             delta = self.fecha_vencimiento - timezone.now().date()
             return delta.days
@@ -249,7 +249,7 @@ class TareaCumplimiento(models.Model):
     def marcar_completa(self):
         """Mark task as completed"""
         self.estado_etapa = 'VALIDADA'
-        self.etapa_actual = 'CONTROL_OFICIAL'
+        self.etapa_actual = 'CONTROL_ADMINISTRADOR'
         self.fecha_completacion = timezone.now()
         self.save()
     

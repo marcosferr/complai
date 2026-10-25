@@ -6,14 +6,13 @@ from django.db import models
 class Usuario(AbstractUser):
     """Custom user model for compliance tracking"""
     ROLE_CHOICES = [
-        # Códigos internos estables; etiquetas del flujo universitario.
-        ('OFICIAL_COMPLIANCE', 'Administrador/a de Contrato'),
-        ('ANALISTA_COMPLIANCE', 'Analista de Contratos (UOC)'),
-        ('GERENTE', 'Director/a de Dependencia'),
+        ('ADMINISTRADOR_CONTRATO', 'Administrador/a de Contrato'),
+        ('ANALISTA_UOC', 'Analista de Contratos (UOC)'),
+        ('DIRECTOR', 'Director/a de Dependencia'),
         ('RESPONSABLE', 'Responsable Técnico'),
     ]
     
-    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='RESPONSABLE')
+    role = models.CharField(max_length=30, choices=ROLE_CHOICES, default='RESPONSABLE')
     phone = models.CharField(max_length=20, blank=True)
     department = models.CharField(max_length=100, blank=True)
     area = models.ForeignKey(
@@ -46,7 +45,7 @@ class Usuario(AbstractUser):
     def clean(self):
         super().clean()
         # Administrador/a de Contrato no requiere dependencia
-        if self.role not in ['OFICIAL_COMPLIANCE', 'ANALISTA_COMPLIANCE'] and not self.area:
+        if self.role not in ['ADMINISTRADOR_CONTRATO', 'ANALISTA_UOC'] and not self.area:
             raise ValidationError({'area': 'La dependencia es obligatoria salvo para el/la Administrador/a de Contrato.'})
 
     def save(self, *args, **kwargs):
@@ -58,6 +57,6 @@ class Usuario(AbstractUser):
         
         if self.area:
             self.department = self.area.nombre
-        elif self.role in ['OFICIAL_COMPLIANCE', 'ANALISTA_COMPLIANCE']:
+        elif self.role in ['ADMINISTRADOR_CONTRATO', 'ANALISTA_UOC']:
             self.department = ''
         super().save(*args, **kwargs)

@@ -46,24 +46,24 @@ class TareaListCreateView(generics.ListCreateAPIView):
 
         # Role-based visibility por etapa
         if user.role == 'RESPONSABLE':
-            # Responsable ve tareas donde está asignado en etapas INICIO y REVISION_GERENCIAL
+            # Responsable ve tareas donde está asignado en etapas INICIO y REVISION_DIRECCION
             # Solo puede modificar las de INICIO
             queryset = queryset.filter(
                 responsables=user,
-                etapa_actual__in=['INICIO', 'REVISION_GERENCIAL']
+                etapa_actual__in=['INICIO', 'REVISION_DIRECCION']
             )
-        elif user.role == 'GERENTE':
-            # Gerente ve tareas de su área en etapas INICIO y REVISION_GERENCIAL
+        elif user.role == 'DIRECTOR':
+            # Gerente ve tareas de su área en etapas INICIO y REVISION_DIRECCION
             queryset = queryset.filter(
                 area=user.area,
-                etapa_actual__in=['INICIO', 'REVISION_GERENCIAL']
+                etapa_actual__in=['INICIO', 'REVISION_DIRECCION']
             )
-        elif user.role == 'ANALISTA_COMPLIANCE':
-            # Analista ve todas las etapas excepto CONTROL_OFICIAL
+        elif user.role == 'ANALISTA_UOC':
+            # Analista ve todas las etapas excepto CONTROL_ADMINISTRADOR
             queryset = queryset.filter(
-                etapa_actual__in=['INICIO', 'REVISION_GERENCIAL', 'CONTROL_ANALISTA']
+                etapa_actual__in=['INICIO', 'REVISION_DIRECCION', 'CONTROL_UOC']
             )
-        elif user.role == 'OFICIAL_COMPLIANCE':
+        elif user.role == 'ADMINISTRADOR_CONTRATO':
             # Oficial ve todas las tareas, pero puede filtrar por etapa
             pass  # Sin filtro - ve todo
         
@@ -128,18 +128,18 @@ class TareaDetailView(generics.RetrieveUpdateDestroyAPIView):
         if user.role == 'RESPONSABLE':
             queryset = queryset.filter(
                 responsables=user,
-                etapa_actual__in=['INICIO', 'REVISION_GERENCIAL']
+                etapa_actual__in=['INICIO', 'REVISION_DIRECCION']
             )
-        elif user.role == 'GERENTE':
+        elif user.role == 'DIRECTOR':
             queryset = queryset.filter(
                 area=user.area,
-                etapa_actual__in=['INICIO', 'REVISION_GERENCIAL']
+                etapa_actual__in=['INICIO', 'REVISION_DIRECCION']
             )
-        elif user.role == 'ANALISTA_COMPLIANCE':
+        elif user.role == 'ANALISTA_UOC':
             queryset = queryset.filter(
-                etapa_actual__in=['INICIO', 'REVISION_GERENCIAL', 'CONTROL_ANALISTA']
+                etapa_actual__in=['INICIO', 'REVISION_DIRECCION', 'CONTROL_UOC']
             )
-        # OFICIAL_COMPLIANCE ve todo
+        # ADMINISTRADOR_CONTRATO ve todo
 
         return queryset
 
@@ -153,7 +153,7 @@ def tareas_por_clausula(request, clausula_id):
         clausula_id=clausula_id
     ).select_related('clausula', 'area', 'creado_por').prefetch_related('responsables', 'cambios_campos')
 
-    if user.role == 'GERENTE':
+    if user.role == 'DIRECTOR':
         tareas = tareas.filter(area=user.area)
     elif user.role == 'RESPONSABLE':
         tareas = tareas.filter(responsables=user)
@@ -423,9 +423,9 @@ def actualizar_responsable(request, tarea_id):
         pk=tarea_id
     )
 
-    if user.role not in {'OFICIAL_COMPLIANCE', 'GERENTE'}:
+    if user.role not in {'ADMINISTRADOR_CONTRATO', 'DIRECTOR'}:
         return Response({'error': 'No tienes permisos para asignar responsables.'}, status=status.HTTP_403_FORBIDDEN)
-    if user.role == 'GERENTE' and tarea.area != user.area:
+    if user.role == 'DIRECTOR' and tarea.area != user.area:
         return Response({'error': 'No tienes permisos para asignar responsables.'}, status=status.HTTP_403_FORBIDDEN)
 
     responsables_ids = request.data.get('responsables', [])
@@ -453,7 +453,7 @@ def actualizar_area_tarea(request, tarea_id):
     tarea = get_object_or_404(TareaCumplimiento, pk=tarea_id)
 
     # Verificar permisos
-    if user.role not in {'ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE'}:
+    if user.role not in {'ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO'}:
         return Response(
             {'error': 'No tienes permisos para modificar el área.'},
             status=status.HTTP_403_FORBIDDEN
@@ -589,7 +589,7 @@ def actualizar_tags_tarea(request, tarea_id):
     tarea = get_object_or_404(TareaCumplimiento, pk=tarea_id)
 
     # Verificar permisos
-    if user.role not in {'ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE'}:
+    if user.role not in {'ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO'}:
         return Response(
             {'error': 'No tienes permisos para modificar las etiquetas.'},
             status=status.HTTP_403_FORBIDDEN
@@ -619,7 +619,7 @@ def listar_areas(request):
     
     if request.method == 'POST':
         # Only admins and managers can create areas
-        if user.role not in ['OFICIAL_COMPLIANCE', 'GERENTE']:
+        if user.role not in ['ADMINISTRADOR_CONTRATO', 'DIRECTOR']:
             return Response(
                 {'error': 'No tienes permisos para crear áreas'},
                 status=status.HTTP_403_FORBIDDEN
@@ -749,7 +749,7 @@ def devolver_con_observaciones(request, pk):
     )
     
     # Solo ciertos roles pueden devolver tareas
-    if user.role not in ['GERENTE', 'ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE']:
+    if user.role not in ['DIRECTOR', 'ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO']:
         return Response(
             {'error': 'No tienes permisos para devolver tareas'},
             status=status.HTTP_403_FORBIDDEN
@@ -768,36 +768,36 @@ def devolver_con_observaciones(request, pk):
     # Lógica de devolución según el rol y etapa actual
     puede_devolver = False
     
-    if user.role == 'GERENTE':
-        if tarea.etapa_actual == 'REVISION_GERENCIAL':
-            # Gerente devuelve a INICIO con estado OBSERVADO_GERENTE
+    if user.role == 'DIRECTOR':
+        if tarea.etapa_actual == 'REVISION_DIRECCION':
+            # Gerente devuelve a INICIO con estado OBSERVADO_DIRECCION
             tarea.etapa_actual = 'INICIO'
-            tarea.estado_etapa = 'OBSERVADO_GERENTE'
+            tarea.estado_etapa = 'OBSERVADO_DIRECCION'
             puede_devolver = True
     
-    elif user.role == 'ANALISTA_COMPLIANCE':
-        if tarea.etapa_actual == 'CONTROL_ANALISTA':
-            # Analista devuelve a REVISION_GERENCIAL con estado OBSERVADO_ANALISTA
-            tarea.etapa_actual = 'REVISION_GERENCIAL'
-            tarea.estado_etapa = 'OBSERVADO_ANALISTA'
+    elif user.role == 'ANALISTA_UOC':
+        if tarea.etapa_actual == 'CONTROL_UOC':
+            # Analista devuelve a REVISION_DIRECCION con estado OBSERVADO_UOC
+            tarea.etapa_actual = 'REVISION_DIRECCION'
+            tarea.estado_etapa = 'OBSERVADO_UOC'
             puede_devolver = True
     
-    elif user.role == 'OFICIAL_COMPLIANCE':
+    elif user.role == 'ADMINISTRADOR_CONTRATO':
         # Oficial puede devolver desde cualquier etapa
-        if tarea.etapa_actual == 'CONTROL_OFICIAL':
-            # Oficial devuelve a CONTROL_ANALISTA con estado OBSERVADO_OFICIAL
-            tarea.etapa_actual = 'CONTROL_ANALISTA'
-            tarea.estado_etapa = 'OBSERVADO_OFICIAL'
+        if tarea.etapa_actual == 'CONTROL_ADMINISTRADOR':
+            # Oficial devuelve a CONTROL_UOC con estado OBSERVADO_ADMINISTRADOR
+            tarea.etapa_actual = 'CONTROL_UOC'
+            tarea.estado_etapa = 'OBSERVADO_ADMINISTRADOR'
             puede_devolver = True
-        elif tarea.etapa_actual == 'CONTROL_ANALISTA':
-            # Oficial devuelve a REVISION_GERENCIAL
-            tarea.etapa_actual = 'REVISION_GERENCIAL'
-            tarea.estado_etapa = 'OBSERVADO_ANALISTA'
+        elif tarea.etapa_actual == 'CONTROL_UOC':
+            # Oficial devuelve a REVISION_DIRECCION
+            tarea.etapa_actual = 'REVISION_DIRECCION'
+            tarea.estado_etapa = 'OBSERVADO_UOC'
             puede_devolver = True
-        elif tarea.etapa_actual == 'REVISION_GERENCIAL':
+        elif tarea.etapa_actual == 'REVISION_DIRECCION':
             # Oficial devuelve a INICIO
             tarea.etapa_actual = 'INICIO'
-            tarea.estado_etapa = 'OBSERVADO_GERENTE'
+            tarea.estado_etapa = 'OBSERVADO_DIRECCION'
             puede_devolver = True
     
     if not puede_devolver:
@@ -831,7 +831,7 @@ def devolver_con_observaciones(request, pk):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
-def registrar_remision_autoridad(request, pk):
+def registrar_remision_rectorado(request, pk):
     """Register Authority submission"""
     user = request.user
     tarea = get_object_or_404(
@@ -839,20 +839,20 @@ def registrar_remision_autoridad(request, pk):
         pk=pk
     )
     
-    if user.role != 'OFICIAL_COMPLIANCE':
+    if user.role != 'ADMINISTRADOR_CONTRATO':
         return Response(
             {'error': 'Solo el/la Administrador/a de Contrato puede registrar remisiones al Rectorado'},
             status=status.HTTP_403_FORBIDDEN
         )
     
-    if tarea.etapa_actual != 'CONTROL_OFICIAL':
+    if tarea.etapa_actual != 'CONTROL_ADMINISTRADOR':
         return Response(
             {'error': 'La obligación debe estar en la etapa Control del Administrador'},
             status=status.HTTP_400_BAD_REQUEST
         )
     
-    fecha_remision = request.data.get('fecha_remision_autoridad')
-    numero_expediente = request.data.get('numero_expediente_autoridad', '')
+    fecha_remision = request.data.get('fecha_remision_rectorado')
+    numero_expediente = request.data.get('numero_expediente_rectorado', '')
     
     if not fecha_remision:
         return Response(
@@ -861,12 +861,12 @@ def registrar_remision_autoridad(request, pk):
         )
     
     # Actualizar tarea
-    tarea.estado_etapa = 'REMITIDO_AUTORIDAD'
-    tarea.fecha_remision_autoridad = fecha_remision
-    tarea.numero_expediente_autoridad = numero_expediente
+    tarea.estado_etapa = 'REMITIDO_RECTORADO'
+    tarea.fecha_remision_rectorado = fecha_remision
+    tarea.numero_expediente_rectorado = numero_expediente
     
-    if 'documento_autoridad' in request.FILES:
-        tarea.documento_autoridad = request.FILES['documento_autoridad']
+    if 'documento_rectorado' in request.FILES:
+        tarea.documento_rectorado = request.FILES['documento_rectorado']
     
     tarea.save()
     
@@ -875,11 +875,11 @@ def registrar_remision_autoridad(request, pk):
         tarea=tarea,
         etapa=tarea.etapa_actual,
         estado_anterior='VALIDADA',
-        estado_nuevo='REMITIDO_AUTORIDAD',
+        estado_nuevo='REMITIDO_RECTORADO',
         usuario=user,
         rol_usuario=user.role,
         observaciones=f'Remitido al Rectorado. Expediente: {numero_expediente}',
-        documento_adjunto=request.FILES.get('documento_autoridad')
+        documento_adjunto=request.FILES.get('documento_rectorado')
     )
     
     return Response(
@@ -917,12 +917,12 @@ def estadisticas_por_etapa(request):
     
     if user.role == 'RESPONSABLE':
         queryset = queryset.filter(etapa_actual='INICIO', responsables=user)
-    elif user.role == 'GERENTE':
-        queryset = queryset.filter(area=user.area, etapa_actual__in=['INICIO', 'REVISION_GERENCIAL'])
-    elif user.role == 'ANALISTA_COMPLIANCE':
-        queryset = queryset.filter(etapa_actual__in=['INICIO', 'REVISION_GERENCIAL', 'CONTROL_ANALISTA'])
+    elif user.role == 'DIRECTOR':
+        queryset = queryset.filter(area=user.area, etapa_actual__in=['INICIO', 'REVISION_DIRECCION'])
+    elif user.role == 'ANALISTA_UOC':
+        queryset = queryset.filter(etapa_actual__in=['INICIO', 'REVISION_DIRECCION', 'CONTROL_UOC'])
     
-    # OFICIAL_COMPLIANCE ve todo
+    # ADMINISTRADOR_CONTRATO ve todo
     
     # Estadísticas por etapa
     from django.db.models import Count, Q
@@ -963,7 +963,7 @@ def cambiar_etapa_directo(request, pk):
     user = request.user
     
     # Solo el/la Administrador/a de Contrato puede usar este endpoint
-    if user.role != "OFICIAL_COMPLIANCE":
+    if user.role != "ADMINISTRADOR_CONTRATO":
         return Response(
             {"error": "Solo el/la Administrador/a de Contrato puede cambiar directamente las etapas"},
             status=status.HTTP_403_FORBIDDEN
@@ -1024,7 +1024,7 @@ def niveles_riesgo(request):
     
     elif request.method == 'POST':
         # Only admins and compliance officials can create risk levels
-        if request.user.role not in ['OFICIAL_COMPLIANCE', 'ANALISTA_COMPLIANCE']:
+        if request.user.role not in ['ADMINISTRADOR_CONTRATO', 'ANALISTA_UOC']:
             return Response(
                 {'error': 'No tienes permisos para crear niveles de riesgo'},
                 status=status.HTTP_403_FORBIDDEN
@@ -1049,7 +1049,7 @@ def nivel_riesgo_detalle(request, pk):
     
     elif request.method == 'PUT':
         # Only admins and compliance officials can update risk levels
-        if request.user.role not in ['OFICIAL_COMPLIANCE', 'ANALISTA_COMPLIANCE']:
+        if request.user.role not in ['ADMINISTRADOR_CONTRATO', 'ANALISTA_UOC']:
             return Response(
                 {'error': 'No tienes permisos para actualizar niveles de riesgo'},
                 status=status.HTTP_403_FORBIDDEN
@@ -1063,7 +1063,7 @@ def nivel_riesgo_detalle(request, pk):
     
     elif request.method == 'DELETE':
         # Only admins and compliance officials can delete risk levels
-        if request.user.role not in ['OFICIAL_COMPLIANCE']:
+        if request.user.role not in ['ADMINISTRADOR_CONTRATO']:
             return Response(
                 {'error': 'No tienes permisos para eliminar niveles de riesgo'},
                 status=status.HTTP_403_FORBIDDEN
@@ -1144,12 +1144,12 @@ def crear_tareas_multiples(request):
 def listar_presentaciones(request, tarea_id):
     """
     List all presentations for a task.
-    Only ANALISTA_COMPLIANCE and OFICIAL_COMPLIANCE can view presentations.
+    Only ANALISTA_UOC and ADMINISTRADOR_CONTRATO can view presentations.
     """
     user = request.user
     
     # Verificar permisos - Solo ANALISTA y OFICIAL pueden ver presentaciones
-    if user.role not in ['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE']:
+    if user.role not in ['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO']:
         return Response(
             {'error': 'No tienes permisos para ver las presentaciones'},
             status=status.HTTP_403_FORBIDDEN
@@ -1166,12 +1166,12 @@ def listar_presentaciones(request, tarea_id):
 def archivar_presentacion(request, tarea_id):
     """
     Archive a new presentation for a task.
-    Only OFICIAL_COMPLIANCE can archive presentations.
+    Only ADMINISTRADOR_CONTRATO can archive presentations.
     """
     user = request.user
     
     # Verificar permisos - Solo OFICIAL puede archivar
-    if user.role != 'OFICIAL_COMPLIANCE':
+    if user.role != 'ADMINISTRADOR_CONTRATO':
         return Response(
             {'error': 'Solo el/la Administrador/a de Contrato puede archivar presentaciones'},
             status=status.HTTP_403_FORBIDDEN

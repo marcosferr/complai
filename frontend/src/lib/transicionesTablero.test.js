@@ -15,7 +15,7 @@ const INICIO_RESPONSABLE = [
   ['EN_PROGRESO', 'En Progreso'],
   ['REQUIERE_ATENCION', 'Requiere Atención'],
 ]
-const INICIO_GERENTE = [...INICIO_RESPONSABLE, ['OBSERVADO_GERENTE', 'Devuelto con Observaciones del Gerente']]
+const INICIO_DIRECTOR = [...INICIO_RESPONSABLE, ['OBSERVADO_DIRECCION', 'Devuelto con Observaciones de la Dirección']]
 const TODOS = Object.keys(ETAPA_DE_ESTADO).map((codigo) => [codigo, codigo])
 
 const tareaInicio = (extra = {}) => ({
@@ -30,10 +30,10 @@ const tareaInicio = (extra = {}) => ({
 
 const responsable = { id: 10, role: 'RESPONSABLE', area: 3 }
 const otroResponsable = { id: 11, role: 'RESPONSABLE', area: 3 }
-const gerente = { id: 20, role: 'GERENTE', area: 3 }
-const gerenteAjeno = { id: 21, role: 'GERENTE', area: 4 }
-const analista = { id: 30, role: 'ANALISTA_COMPLIANCE', area: 3 }
-const oficial = { id: 40, role: 'OFICIAL_COMPLIANCE', area: null }
+const gerente = { id: 20, role: 'DIRECTOR', area: 3 }
+const gerenteAjeno = { id: 21, role: 'DIRECTOR', area: 4 }
+const analista = { id: 30, role: 'ANALISTA_UOC', area: 3 }
+const oficial = { id: 40, role: 'ADMINISTRADOR_CONTRATO', area: null }
 
 describe('puedeSoltarEn', () => {
   it('el responsable asignado mueve dentro de su etapa', () => {
@@ -46,12 +46,12 @@ describe('puedeSoltarEn', () => {
   })
 
   it('no ofrece estados que el servidor no listó para ese usuario', () => {
-    expect(puedeSoltarEn(tareaInicio(), 'OBSERVADO_GERENTE', responsable)).toBe(false)
+    expect(puedeSoltarEn(tareaInicio(), 'OBSERVADO_DIRECCION', responsable)).toBe(false)
   })
 
   it('no deja saltar de etapa a quien no es Oficial', () => {
-    expect(puedeSoltarEn(tareaInicio(), 'VALIDADO_GERENTE', responsable)).toBe(false)
-    expect(puedeSoltarEn(tareaInicio(), 'APROBADO_AUTORIDAD', responsable)).toBe(false)
+    expect(puedeSoltarEn(tareaInicio(), 'VALIDADO_DIRECCION', responsable)).toBe(false)
+    expect(puedeSoltarEn(tareaInicio(), 'APROBADO_RECTORADO', responsable)).toBe(false)
   })
 
   it('el responsable no asignado no mueve la tarea', () => {
@@ -64,13 +64,13 @@ describe('puedeSoltarEn', () => {
   })
 
   it('el gerente mueve las de su área y no las de otra', () => {
-    const tarea = tareaInicio({ estados_disponibles: INICIO_GERENTE })
-    expect(puedeSoltarEn(tarea, 'OBSERVADO_GERENTE', gerente)).toBe(true)
-    expect(puedeSoltarEn(tarea, 'OBSERVADO_GERENTE', gerenteAjeno)).toBe(false)
+    const tarea = tareaInicio({ estados_disponibles: INICIO_DIRECTOR })
+    expect(puedeSoltarEn(tarea, 'OBSERVADO_DIRECCION', gerente)).toBe(true)
+    expect(puedeSoltarEn(tarea, 'OBSERVADO_DIRECCION', gerenteAjeno)).toBe(false)
   })
 
   it('el gerente no mueve una tarea sin área', () => {
-    const tarea = tareaInicio({ estados_disponibles: INICIO_GERENTE, area: null })
+    const tarea = tareaInicio({ estados_disponibles: INICIO_DIRECTOR, area: null })
     expect(puedeSoltarEn(tarea, 'EN_PROGRESO', gerente)).toBe(false)
   })
 
@@ -81,17 +81,17 @@ describe('puedeSoltarEn', () => {
   it('el analista mueve en revisión gerencial y en su propia etapa', () => {
     const revision = {
       ...tareaInicio(),
-      etapa_actual: 'REVISION_GERENCIAL',
-      estado_etapa: 'REVISION_GERENCIAL',
-      estados_disponibles: [['REVISION_GERENCIAL', ''], ['VALIDADO_GERENTE', ''], ['OBSERVADO_ANALISTA', '']],
+      etapa_actual: 'REVISION_DIRECCION',
+      estado_etapa: 'REVISION_DIRECCION',
+      estados_disponibles: [['REVISION_DIRECCION', ''], ['VALIDADO_DIRECCION', ''], ['OBSERVADO_UOC', '']],
     }
-    expect(puedeSoltarEn(revision, 'OBSERVADO_ANALISTA', analista)).toBe(true)
+    expect(puedeSoltarEn(revision, 'OBSERVADO_UOC', analista)).toBe(true)
   })
 
   it('el Oficial puede soltar en cualquier columna, incluso de otra etapa', () => {
     const tarea = tareaInicio({ estados_disponibles: TODOS })
-    expect(puedeSoltarEn(tarea, 'APROBADO_AUTORIDAD', oficial)).toBe(true)
-    expect(puedeSoltarEn(tarea, 'OBSERVADO_GERENTE', oficial)).toBe(true)
+    expect(puedeSoltarEn(tarea, 'APROBADO_RECTORADO', oficial)).toBe(true)
+    expect(puedeSoltarEn(tarea, 'OBSERVADO_DIRECCION', oficial)).toBe(true)
   })
 
   it('sin usuario, sin tarea o sin estados disponibles no se mueve nada', () => {
@@ -104,7 +104,7 @@ describe('puedeSoltarEn', () => {
 
 describe('destinosPermitidos', () => {
   it('filtra las columnas visibles', () => {
-    const columnas = ['PENDIENTE', 'EN_PROGRESO', 'REQUIERE_ATENCION', 'OBSERVADO_GERENTE']
+    const columnas = ['PENDIENTE', 'EN_PROGRESO', 'REQUIERE_ATENCION', 'OBSERVADO_DIRECCION']
     expect(destinosPermitidos(tareaInicio(), responsable, columnas)).toEqual([
       'EN_PROGRESO',
       'REQUIERE_ATENCION',
@@ -121,7 +121,7 @@ describe('aplicarMovimiento y reemplazarTarea', () => {
 
   it('cambia estado y etapa de la tarea movida sin tocar la lista original', () => {
     const movidas = aplicarMovimiento(tareas, 7, 'VALIDADA')
-    expect(movidas[0]).toMatchObject({ id: 7, estado_etapa: 'VALIDADA', etapa_actual: 'CONTROL_OFICIAL' })
+    expect(movidas[0]).toMatchObject({ id: 7, estado_etapa: 'VALIDADA', etapa_actual: 'CONTROL_ADMINISTRADOR' })
     expect(movidas[1]).toBe(tareas[1])
     expect(tareas[0].estado_etapa).toBe('PENDIENTE')
   })

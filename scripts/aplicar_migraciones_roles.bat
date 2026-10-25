@@ -38,7 +38,7 @@ echo    Migraciones aplicadas exitosamente
 echo ================================================
 echo.
 echo Notas importantes:
-echo   - Todos los usuarios ADMIN ahora son OFICIAL_COMPLIANCE
+echo   - Todos los usuarios ADMIN ahora son ADMINISTRADOR_CONTRATO
 echo   - Las tareas existentes tienen etapas asignadas
 echo   - El backend esta listo para usar
 echo   - El frontend requiere actualizacion

@@ -125,7 +125,7 @@ test.describe('08 - Creación de Usuarios', () => {
     await docHelper.documentStep(
       8,
       'Selección de Rol',
-      'Los roles determinan los permisos del usuario: ADMIN (acceso total), GERENTE (gestiona su área), RESPONSABLE (gestiona tareas asignadas), ANALISTA (consulta y reportes).'
+      'Los roles determinan los permisos del usuario: ADMIN (acceso total), DIRECTOR (gestiona su área), RESPONSABLE (gestiona tareas asignadas), ANALISTA (consulta y reportes).'
     );
 
     // ============================================
@@ -186,7 +186,7 @@ test.describe('08 - Creación de Usuarios', () => {
     await docHelper.documentStep(
       12,
       'Gestión Completa de Usuarios',
-      'Resumen de roles del sistema: ADMIN (configuración completa), GERENTE (supervisa área), RESPONSABLE (ejecuta tareas asignadas). Cada rol determina los permisos y vistas disponibles.'
+      'Resumen de roles del sistema: ADMIN (configuración completa), DIRECTOR (supervisa área), RESPONSABLE (ejecuta tareas asignadas). Cada rol determina los permisos y vistas disponibles.'
     );
 
     // Generar el README final

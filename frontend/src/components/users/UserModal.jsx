@@ -116,8 +116,8 @@ const UserModal = ({ isOpen, onClose, user, onSuccess }) => {
       newErrors.last_name = 'El apellido es requerido'
     }
     
-    // Área es requerida solo para RESPONSABLE y GERENTE
-    if (['RESPONSABLE', 'GERENTE'].includes(formData.role) && !formData.area) {
+    // Área es requerida solo para RESPONSABLE y DIRECTOR
+    if (['RESPONSABLE', 'DIRECTOR'].includes(formData.role) && !formData.area) {
       newErrors.area = 'La dependencia es obligatoria para este rol'
     }
     
@@ -356,7 +356,7 @@ const UserModal = ({ isOpen, onClose, user, onSuccess }) => {
             {/* Area/Department */}
             <div>
               <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                Dependencia {formData.role !== 'OFICIAL_COMPLIANCE' && '*'}
+                Dependencia {formData.role !== 'ADMINISTRADOR_CONTRATO' && '*'}
               </label>
               <div className="flex gap-2">
                 <select
@@ -389,17 +389,17 @@ const UserModal = ({ isOpen, onClose, user, onSuccess }) => {
               {errors.area && (
                 <p className="text-red-500 text-sm mt-1">{errors.area}</p>
               )}
-              {!['OFICIAL_COMPLIANCE', 'ANALISTA_COMPLIANCE'].includes(formData.role) && (
+              {!['ADMINISTRADOR_CONTRATO', 'ANALISTA_UOC'].includes(formData.role) && (
                 <p className="text-gray-500 text-xs mt-1">
                   La dependencia es obligatoria para Responsables Técnicos y Directores/as
                 </p>
               )}
-              {formData.role === 'OFICIAL_COMPLIANCE' && (
+              {formData.role === 'ADMINISTRADOR_CONTRATO' && (
                 <p className="text-blue-500 text-xs mt-1">
                   Opcional: el/la Administrador/a de Contrato ve todas las dependencias
                 </p>
               )}
-              {formData.role === 'ANALISTA_COMPLIANCE' && (
+              {formData.role === 'ANALISTA_UOC' && (
                 <p className="text-blue-500 text-xs mt-1">
                   Opcional: la UOC ve todas las dependencias
                 </p>

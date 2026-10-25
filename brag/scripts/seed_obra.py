@@ -47,8 +47,8 @@ def tarea(cl, titulo, dias, etapa='INICIO', estado='PENDIENTE', prio='MEDIA', im
 
 tarea(1, 'Supervisar la etapa de obra gris: mamposterías, cubiertas e instalaciones ocultas', 45, prio='MEDIA', riesgos=['Riesgo Operativo'])
 tarea(2, 'Controlar el plazo de ejecución de 257 días calendario', 60, prio='ALTA', imp='ALTO', prob='BAJA', riesgos=['Riesgo Contractual'])
-fiscal = tarea(3, 'Recibir y revisar el informe de seguimiento de la Fiscal de Obras', 6, 'REVISION_GERENCIAL', 'REVISION_GERENCIAL', riesgos=['Riesgo Operativo'])
-tarea(4, 'Emitir el dictamen fundado del administrador sobre la modificación', 30, 'CONTROL_OFICIAL', 'VALIDADA', prio='ALTA', riesgos=['Riesgo Legal'])
+fiscal = tarea(3, 'Recibir y revisar el informe de seguimiento de la Fiscal de Obras', 6, 'REVISION_DIRECCION', 'REVISION_DIRECCION', riesgos=['Riesgo Operativo'])
+tarea(4, 'Emitir el dictamen fundado del administrador sobre la modificación', 30, 'CONTROL_ADMINISTRADOR', 'VALIDADA', prio='ALTA', riesgos=['Riesgo Legal'])
 tarea(4, 'Verificar que la ampliación no supere el 20 % del monto y plazo', 5, estado='EN_PROGRESO', prio='ALTA', imp='ALTO', riesgos=['Riesgo Legal', 'Riesgo Financiero'])
 firma = tarea(4, 'Gestionar la firma del convenio modificatorio por la máxima autoridad', -4, estado='REQUIERE_ATENCION', prio='CRITICA', imp='ALTO', prob='ALTA', riesgos=['Riesgo Contractual'])
 docu = tarea(4, 'Reunir la documentación del convenio modificatorio', 12, prio='MEDIA', imp='MEDIO', prob='BAJA', riesgos=['Riesgo Legal'])

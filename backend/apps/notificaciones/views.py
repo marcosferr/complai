@@ -85,11 +85,11 @@ class NotificacionConfiguracionViewSet(viewsets.ModelViewSet):
         user = self.request.user
         
         # Oficiales and Analistas can see all configs
-        if user.role in ['OFICIAL_COMPLIANCE', 'ANALISTA_COMPLIANCE']:
+        if user.role in ['ADMINISTRADOR_CONTRATO', 'ANALISTA_UOC']:
             return NotificacionConfiguracion.objects.all().select_related('tarea')
         
         # Gerentes can see configs from their area
-        if user.role == 'GERENTE' and user.area:
+        if user.role == 'DIRECTOR' and user.area:
             return NotificacionConfiguracion.objects.filter(
                 tarea__area=user.area
             ).select_related('tarea')

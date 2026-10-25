@@ -17,7 +17,7 @@ urlpatterns = [
     path('<int:pk>/avanzar-etapa/', views.avanzar_etapa, name='tarea-avanzar-etapa'),
     path('<int:pk>/devolver/', views.devolver_con_observaciones, name='tarea-devolver'),
     path('<int:pk>/cambiar-etapa/', views.cambiar_etapa_directo, name='tarea-cambiar-etapa-directo'),
-    path('<int:pk>/remision-autoridad/', views.registrar_remision_autoridad, name='tarea-remision-autoridad'),
+    path('<int:pk>/remision-rectorado/', views.registrar_remision_rectorado, name='tarea-remision-rectorado'),
     path('<int:pk>/historial/', views.historial_estados, name='tarea-historial-estados'),
     path('estadisticas/', views.estadisticas_por_etapa, name='tareas-estadisticas'),
     

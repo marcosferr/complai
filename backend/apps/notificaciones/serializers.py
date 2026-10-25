@@ -41,7 +41,7 @@ class NotificacionSerializer(serializers.ModelSerializer):
         esta_vencida = False
         if tarea.fecha_vencimiento:
             from django.utils import timezone
-            estados_completados = ['VALIDADA', 'APROBADO_AUTORIDAD']
+            estados_completados = ['VALIDADA', 'APROBADO_RECTORADO']
             if tarea.estado_etapa not in estados_completados:
                 delta = tarea.fecha_vencimiento - timezone.now().date()
                 dias_restantes = delta.days

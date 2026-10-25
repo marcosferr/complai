@@ -29,10 +29,10 @@ plazos, entregables, responsables, evidencias y alertas.
 
 Cada etapa puede devolver la obligación a la anterior con observaciones.
 
-Las etiquetas viven en `frontend/src/lib/estadoEtapaConstants.js` (roles, etapas y estados) y en los
-`choices` de `backend/apps/authentication/models.py` y `backend/apps/tareas/models.py`. Los códigos
-internos (`GERENTE`, `REVISION_GERENCIAL`, `OFICIAL_COMPLIANCE`, …) se mantienen por compatibilidad con
-la base de datos y los permisos.
+Códigos internos: roles `RESPONSABLE`, `DIRECTOR`, `ANALISTA_UOC`, `ADMINISTRADOR_CONTRATO`; etapas
+`INICIO`, `REVISION_DIRECCION`, `CONTROL_UOC`, `CONTROL_ADMINISTRADOR`. Las etiquetas viven en
+`frontend/src/lib/estadoEtapaConstants.js` y en los `choices` de `backend/apps/authentication/models.py`
+y `backend/apps/tareas/models.py`.
 
 ## Inicio rápido
 

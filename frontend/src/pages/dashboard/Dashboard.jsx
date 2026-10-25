@@ -93,7 +93,7 @@ const Dashboard = () => {
           </>
         )
 
-      case 'GERENTE':
+      case 'DIRECTOR':
         return (
           <>
             <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-lg border border-border-light dark:border-border-dark shadow-sm">
@@ -158,7 +158,7 @@ const Dashboard = () => {
           </>
         )
 
-      case 'ANALISTA_COMPLIANCE':
+      case 'ANALISTA_UOC':
         return (
           <>
             <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-lg border border-border-light dark:border-border-dark shadow-sm">
@@ -223,7 +223,7 @@ const Dashboard = () => {
           </>
         )
 
-      case 'OFICIAL_COMPLIANCE':
+      case 'ADMINISTRADOR_CONTRATO':
         return (
           <>
             <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-lg border border-border-light dark:border-border-dark shadow-sm">
@@ -290,7 +290,7 @@ const Dashboard = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-success mb-1 font-medium">Remitidas al Rectorado</p>
-                  <p className="text-3xl font-bold text-success">{stats.tareas.remitidas_autoridad}</p>
+                  <p className="text-3xl font-bold text-success">{stats.tareas.remitidas_rectorado}</p>
                 </div>
                 <span className="material-icons text-success text-4xl">send</span>
               </div>
@@ -300,7 +300,7 @@ const Dashboard = () => {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-sm text-success mb-1 font-medium">Aprobadas por el Rectorado</p>
-                  <p className="text-3xl font-bold text-success">{stats.tareas.aprobadas_autoridad}</p>
+                  <p className="text-3xl font-bold text-success">{stats.tareas.aprobadas_rectorado}</p>
                 </div>
                 <span className="material-icons text-success text-4xl">verified</span>
               </div>
@@ -473,7 +473,7 @@ const Dashboard = () => {
       </div>
 
       {/* Detalles por etapa (solo para roles con múltiples etapas) */}
-      {user?.role === 'OFICIAL_COMPLIANCE' && (
+      {user?.role === 'ADMINISTRADOR_CONTRATO' && (
         <div className="bg-surface-light dark:bg-surface-dark p-6 rounded-lg border border-border-light dark:border-border-dark shadow-sm">
           <h2 className="text-lg font-semibold text-text-light dark:text-text-dark mb-4 flex items-center">
             <span className="material-icons text-audit mr-2">trending_up</span>
@@ -485,16 +485,16 @@ const Dashboard = () => {
               <p className="text-xs text-subtle-light dark:text-subtle-dark mt-1">Inicio</p>
             </div>
             <div className="text-center p-4 bg-background-light dark:bg-background-dark rounded-lg">
-              <p className="text-2xl font-bold text-audit">{stats.tareas.en_revision_gerencial}</p>
-              <p className="text-xs text-subtle-light dark:text-subtle-dark mt-1">{ETAPA_LABELS.REVISION_GERENCIAL}</p>
+              <p className="text-2xl font-bold text-audit">{stats.tareas.en_revision_direccion}</p>
+              <p className="text-xs text-subtle-light dark:text-subtle-dark mt-1">{ETAPA_LABELS.REVISION_DIRECCION}</p>
             </div>
             <div className="text-center p-4 bg-background-light dark:bg-background-dark rounded-lg">
-              <p className="text-2xl font-bold text-primary">{stats.tareas.en_control_analista}</p>
-              <p className="text-xs text-subtle-light dark:text-subtle-dark mt-1">{ETAPA_LABELS.CONTROL_ANALISTA}</p>
+              <p className="text-2xl font-bold text-primary">{stats.tareas.en_control_uoc}</p>
+              <p className="text-xs text-subtle-light dark:text-subtle-dark mt-1">{ETAPA_LABELS.CONTROL_UOC}</p>
             </div>
             <div className="text-center p-4 bg-background-light dark:bg-background-dark rounded-lg">
-              <p className="text-2xl font-bold text-success">{stats.tareas.en_control_oficial}</p>
-              <p className="text-xs text-subtle-light dark:text-subtle-dark mt-1">{ETAPA_LABELS.CONTROL_OFICIAL}</p>
+              <p className="text-2xl font-bold text-success">{stats.tareas.en_control_administrador}</p>
+              <p className="text-xs text-subtle-light dark:text-subtle-dark mt-1">{ETAPA_LABELS.CONTROL_ADMINISTRADOR}</p>
             </div>
           </div>
         </div>

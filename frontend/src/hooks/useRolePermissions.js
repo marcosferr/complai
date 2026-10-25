@@ -8,9 +8,9 @@ import { ETAPA_LABELS } from '@/lib/estadoEtapaConstants'
  * 
  * Roles y sus accesos:
  * - RESPONSABLE: Solo ve tareas asignadas, sin filtros de etapas, áreas ni responsables
- * - GERENTE: Ve tareas de su área, solo etapas INICIO y REVISION_GERENCIAL, sin filtro de área
- * - ANALISTA_COMPLIANCE: Ve tareas en INICIO, REVISION_GERENCIAL y CONTROL_ANALISTA, acceso a todos los filtros
- * - OFICIAL_COMPLIANCE: Acceso total
+ * - DIRECTOR: Ve tareas de su área, solo etapas INICIO y REVISION_DIRECCION, sin filtro de área
+ * - ANALISTA_UOC: Ve tareas en INICIO, REVISION_DIRECCION y CONTROL_UOC, acceso a todos los filtros
+ * - ADMINISTRADOR_CONTRATO: Acceso total
  */
 export const useRolePermissions = () => {
   const { user } = useSelector((state) => state.auth)
@@ -39,7 +39,7 @@ export const useRolePermissions = () => {
           areaRequiredInTasks: true, // El área es requerida
         }
       
-      case 'GERENTE':
+      case 'DIRECTOR':
         return {
           canViewEtapasFilter: true,
           canViewAreaFilter: false, // Solo pertenece a un área
@@ -59,7 +59,7 @@ export const useRolePermissions = () => {
           areaRequiredInTasks: true, // El área es requerida
         }
       
-      case 'ANALISTA_COMPLIANCE':
+      case 'ANALISTA_UOC':
         return {
           canViewEtapasFilter: true,
           canViewAreaFilter: true,
@@ -79,7 +79,7 @@ export const useRolePermissions = () => {
           areaRequiredInTasks: false, // El área es opcional
         }
       
-      case 'OFICIAL_COMPLIANCE':
+      case 'ADMINISTRADOR_CONTRATO':
         return {
           canViewEtapasFilter: true,
           canViewAreaFilter: true,
@@ -128,28 +128,28 @@ export const useRolePermissions = () => {
         // No ve filtro de etapas, solo trabaja en INICIO
         return []
       
-      case 'GERENTE':
-        // Solo INICIO y REVISION_GERENCIAL
+      case 'DIRECTOR':
+        // Solo INICIO y REVISION_DIRECCION
         return [
           { value: 'INICIO', label: 'Inicio' },
-          { value: 'REVISION_GERENCIAL', label: ETAPA_LABELS.REVISION_GERENCIAL }
+          { value: 'REVISION_DIRECCION', label: ETAPA_LABELS.REVISION_DIRECCION }
         ]
       
-      case 'ANALISTA_COMPLIANCE':
-        // Hasta CONTROL_ANALISTA (no ve CONTROL_OFICIAL)
+      case 'ANALISTA_UOC':
+        // Hasta CONTROL_UOC (no ve CONTROL_ADMINISTRADOR)
         return [
           { value: 'INICIO', label: 'Inicio' },
-          { value: 'REVISION_GERENCIAL', label: ETAPA_LABELS.REVISION_GERENCIAL },
-          { value: 'CONTROL_ANALISTA', label: ETAPA_LABELS.CONTROL_ANALISTA }
+          { value: 'REVISION_DIRECCION', label: ETAPA_LABELS.REVISION_DIRECCION },
+          { value: 'CONTROL_UOC', label: ETAPA_LABELS.CONTROL_UOC }
         ]
       
-      case 'OFICIAL_COMPLIANCE':
+      case 'ADMINISTRADOR_CONTRATO':
         // Todas las etapas
         return [
           { value: 'INICIO', label: 'Inicio' },
-          { value: 'REVISION_GERENCIAL', label: ETAPA_LABELS.REVISION_GERENCIAL },
-          { value: 'CONTROL_ANALISTA', label: ETAPA_LABELS.CONTROL_ANALISTA },
-          { value: 'CONTROL_OFICIAL', label: ETAPA_LABELS.CONTROL_OFICIAL }
+          { value: 'REVISION_DIRECCION', label: ETAPA_LABELS.REVISION_DIRECCION },
+          { value: 'CONTROL_UOC', label: ETAPA_LABELS.CONTROL_UOC },
+          { value: 'CONTROL_ADMINISTRADOR', label: ETAPA_LABELS.CONTROL_ADMINISTRADOR }
         ]
       
       default:
@@ -177,30 +177,30 @@ export const useRolePermissions = () => {
             estadosAMostrar = [...TODOS_ESTADOS_ETAPAS.INICIO]
             break
           
-          case 'GERENTE':
-            // INICIO + REVISION_GERENCIAL (sin duplicar OBSERVADO_ANALISTA)
+          case 'DIRECTOR':
+            // INICIO + REVISION_DIRECCION (sin duplicar OBSERVADO_UOC)
             estadosAMostrar = [
               ...TODOS_ESTADOS_ETAPAS.INICIO,
-              ...TODOS_ESTADOS_ETAPAS.REVISION_GERENCIAL
+              ...TODOS_ESTADOS_ETAPAS.REVISION_DIRECCION
             ]
             break
           
-          case 'ANALISTA_COMPLIANCE':
-            // INICIO + REVISION_GERENCIAL + CONTROL_ANALISTA (sin duplicar OBSERVADO_ANALISTA)
+          case 'ANALISTA_UOC':
+            // INICIO + REVISION_DIRECCION + CONTROL_UOC (sin duplicar OBSERVADO_UOC)
             estadosAMostrar = [
               ...TODOS_ESTADOS_ETAPAS.INICIO,
-              ...TODOS_ESTADOS_ETAPAS.REVISION_GERENCIAL,
-              ...TODOS_ESTADOS_ETAPAS.CONTROL_ANALISTA
+              ...TODOS_ESTADOS_ETAPAS.REVISION_DIRECCION,
+              ...TODOS_ESTADOS_ETAPAS.CONTROL_UOC
             ]
             break
           
-          case 'OFICIAL_COMPLIANCE':
+          case 'ADMINISTRADOR_CONTRATO':
             // Todas las etapas
             estadosAMostrar = [
               ...TODOS_ESTADOS_ETAPAS.INICIO,
-              ...TODOS_ESTADOS_ETAPAS.REVISION_GERENCIAL,
-              ...TODOS_ESTADOS_ETAPAS.CONTROL_ANALISTA,
-              ...TODOS_ESTADOS_ETAPAS.CONTROL_OFICIAL
+              ...TODOS_ESTADOS_ETAPAS.REVISION_DIRECCION,
+              ...TODOS_ESTADOS_ETAPAS.CONTROL_UOC,
+              ...TODOS_ESTADOS_ETAPAS.CONTROL_ADMINISTRADOR
             ]
             break
           

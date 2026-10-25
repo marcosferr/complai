@@ -547,20 +547,20 @@ const DocumentGraph = ({ documento, clausulas = [], parentClausulas = [], auxili
               source: `clausula-${clausula.id}`,
               target: `tarea-${tarea.id}`,
               type: 'smoothstep',
-              animated: ['EN_PROGRESO', 'EN_PROGRESO_ANALISTA', 'REVISION_GERENCIAL', 'REVISION_ANALISTA'].includes(tarea.estado_etapa),
+              animated: ['EN_PROGRESO', 'EN_PROGRESO_UOC', 'REVISION_DIRECCION', 'REVISION_UOC'].includes(tarea.estado_etapa),
               style: {
-                stroke: ['VALIDADA', 'APROBADO_AUTORIDAD', 'VALIDADO_GERENTE'].includes(tarea.estado_etapa)
+                stroke: ['VALIDADA', 'APROBADO_RECTORADO', 'VALIDADO_DIRECCION'].includes(tarea.estado_etapa)
                   ? '#10b981'
-                  : ['REQUIERE_ATENCION', 'OBSERVADO_GERENTE', 'OBSERVADO_ANALISTA', 'OBSERVADO_OFICIAL', 'OBSERVADO_AUTORIDAD', 'RECHAZADO_AUTORIDAD'].includes(tarea.estado_etapa)
+                  : ['REQUIERE_ATENCION', 'OBSERVADO_DIRECCION', 'OBSERVADO_UOC', 'OBSERVADO_ADMINISTRADOR', 'OBSERVADO_RECTORADO', 'RECHAZADO_RECTORADO'].includes(tarea.estado_etapa)
                   ? '#ef4444'
                   : '#6b7280',
                 strokeWidth: 3,
               },
               markerEnd: {
                 type: MarkerType.ArrowClosed,
-                color: ['VALIDADA', 'APROBADO_AUTORIDAD', 'VALIDADO_GERENTE'].includes(tarea.estado_etapa)
+                color: ['VALIDADA', 'APROBADO_RECTORADO', 'VALIDADO_DIRECCION'].includes(tarea.estado_etapa)
                   ? '#10b981'
-                  : ['REQUIERE_ATENCION', 'OBSERVADO_GERENTE', 'OBSERVADO_ANALISTA', 'OBSERVADO_OFICIAL', 'OBSERVADO_AUTORIDAD', 'RECHAZADO_AUTORIDAD'].includes(tarea.estado_etapa)
+                  : ['REQUIERE_ATENCION', 'OBSERVADO_DIRECCION', 'OBSERVADO_UOC', 'OBSERVADO_ADMINISTRADOR', 'OBSERVADO_RECTORADO', 'RECHAZADO_RECTORADO'].includes(tarea.estado_etapa)
                   ? '#ef4444'
                   : '#6b7280',
                 width: 20,

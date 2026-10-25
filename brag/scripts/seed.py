@@ -14,9 +14,9 @@ def usuario(username, first, last, role, area=None):
     u = Usuario(username=username, email=f'{username}@ejemplo.edu.py', first_name=first, last_name=last, role=role, area=area)
     u.set_password('Demo-UNI-2026!'); u.save(skip_validation=True); return u
 
-oficial = usuario('admin.contratos', 'Laura', 'Benítez', 'OFICIAL_COMPLIANCE')
+oficial = usuario('admin.contratos', 'Laura', 'Benítez', 'ADMINISTRADOR_CONTRATO')
 resp = usuario('resp.infra', 'Diego', 'Ramírez', 'RESPONSABLE', area)
-usuario('jefa.infra', 'Ana', 'Giménez', 'GERENTE', area)
+usuario('jefa.infra', 'Ana', 'Giménez', 'DIRECTOR', area)
 
 doc = DocumentoLegal.objects.create(
     titulo='Contrato de Mantenimiento de Climatización 2026',
@@ -43,12 +43,12 @@ ajustes = [
     ('póliza de garantía', -1, 'INICIO', 'PENDIENTE', 'CRITICA', 'ALTO', 'ALTA', ['Riesgo Financiero', 'Riesgo Contractual']),
     ('inventario inicial', 3, 'INICIO', 'EN_PROGRESO', 'ALTA', 'MEDIO', 'MEDIA', ['Riesgo Operativo']),
     ('tiempos de respuesta', 5, 'INICIO', 'EN_PROGRESO', 'ALTA', 'ALTO', 'MEDIA', ['Riesgo Operativo']),
-    ('informe técnico mensual', 6, 'REVISION_GERENCIAL', 'REVISION_GERENCIAL', 'MEDIA', 'MEDIO', 'MEDIA', ['Riesgo Operativo']),
+    ('informe técnico mensual', 6, 'REVISION_DIRECCION', 'REVISION_DIRECCION', 'MEDIA', 'MEDIO', 'MEDIA', ['Riesgo Operativo']),
     ('documentación de pago', 12, 'INICIO', 'PENDIENTE', 'MEDIA', 'MEDIO', 'BAJA', ['Riesgo Financiero']),
-    ('informe de conformidad', 14, 'CONTROL_ANALISTA', 'REVISION_ANALISTA', 'ALTA', 'MEDIO', 'BAJA', ['Riesgo Legal']),
+    ('informe de conformidad', 14, 'CONTROL_UOC', 'REVISION_UOC', 'ALTA', 'MEDIO', 'BAJA', ['Riesgo Legal']),
     ('Calcular multas', 20, 'INICIO', 'PENDIENTE', 'MEDIA', 'MEDIO', 'MEDIA', ['Riesgo Legal']),
     ('por muestreo', 25, 'INICIO', 'PENDIENTE', 'MEDIA', 'BAJO', 'MEDIA', []),
-    ('Controlar la vigencia', 60, 'CONTROL_OFICIAL', 'VALIDADA', 'ALTA', 'ALTO', 'BAJA', ['Riesgo Financiero']),
+    ('Controlar la vigencia', 60, 'CONTROL_ADMINISTRADOR', 'VALIDADA', 'ALTA', 'ALTO', 'BAJA', ['Riesgo Financiero']),
 ]
 etapas = [c[0] for c in T.ETAPA_CHOICES]
 for sub, dias, etapa, estado, prio, imp, prob, rs in ajustes:

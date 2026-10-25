@@ -201,7 +201,7 @@ Esta extracción automática facilita la gestión del compliance al convertir do
       [
         '**Endpoint API**: `POST /api/documentos/upload/` - Multipart form data',
         '**Modelo**: `apps.documentos.models.DocumentoLegal`',
-        '**Permisos**: Requiere autenticación. Roles ADMIN y GERENTE pueden crear documentos.',
+        '**Permisos**: Requiere autenticación. Roles ADMIN y DIRECTOR pueden crear documentos.',
         '**Procesamiento IA**: Tarea Celery `process_document_with_ai` ejecutada en background',
         '**Estados de procesamiento**: PENDIENTE → PROCESANDO → COMPLETADO/ERROR',
         '**Formatos soportados**: PDF, DOC, DOCX, TXT',

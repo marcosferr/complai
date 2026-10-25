@@ -33,10 +33,10 @@ class CambiarEstadoEtapaTests(APITestCase):
 
         self.responsable = usuario('responsable', 'RESPONSABLE', self.area)
         self.otro_responsable = usuario('otro', 'RESPONSABLE', self.area)
-        self.gerente = usuario('gerente', 'GERENTE', self.area)
-        self.gerente_ajeno = usuario('gerente2', 'GERENTE', self.otra_area)
-        self.analista = usuario('analista', 'ANALISTA_COMPLIANCE', self.area)
-        self.oficial = usuario('oficial', 'OFICIAL_COMPLIANCE', None)
+        self.gerente = usuario('gerente', 'DIRECTOR', self.area)
+        self.gerente_ajeno = usuario('gerente2', 'DIRECTOR', self.otra_area)
+        self.analista = usuario('analista', 'ANALISTA_UOC', self.area)
+        self.oficial = usuario('oficial', 'ADMINISTRADOR_CONTRATO', None)
 
         self.tarea = TareaCumplimiento.objects.create(
             titulo='Presentar informe de avance',
@@ -82,7 +82,7 @@ class CambiarEstadoEtapaTests(APITestCase):
     def test_el_usuario_del_historial_sale_de_la_sesion(self):
         self.cambiar(
             self.responsable, 'EN_PROGRESO',
-            usuario=self.oficial.pk, rol_usuario='OFICIAL_COMPLIANCE',
+            usuario=self.oficial.pk, rol_usuario='ADMINISTRADOR_CONTRATO',
         )
 
         registro = HistorialEstadoTarea.objects.get(tarea=self.tarea)
@@ -90,7 +90,7 @@ class CambiarEstadoEtapaTests(APITestCase):
         self.assertEqual(registro.rol_usuario, 'RESPONSABLE')
 
     def test_gerente_del_area_cambia_estado(self):
-        respuesta = self.cambiar(self.gerente, 'OBSERVADO_GERENTE')
+        respuesta = self.cambiar(self.gerente, 'OBSERVADO_DIRECCION')
         self.assertEqual(respuesta.status_code, status.HTTP_200_OK, respuesta.data)
 
     def test_oficial_puede_mover_a_otra_etapa(self):
@@ -98,26 +98,26 @@ class CambiarEstadoEtapaTests(APITestCase):
 
         self.assertEqual(respuesta.status_code, status.HTTP_200_OK, respuesta.data)
         self.tarea.refresh_from_db()
-        self.assertEqual(self.tarea.etapa_actual, 'CONTROL_OFICIAL')
+        self.assertEqual(self.tarea.etapa_actual, 'CONTROL_ADMINISTRADOR')
         self.assertEqual(self.tarea.estado_etapa, 'VALIDADA')
         self.assertEqual(HistorialEstadoTarea.objects.get(tarea=self.tarea).usuario, self.oficial)
 
     # --- regresión: saltar de etapa sin pasar por avanzar/devolver ------------
 
-    def test_responsable_no_puede_saltar_a_aprobado_por_autoridad(self):
-        respuesta = self.cambiar(self.responsable, 'APROBADO_AUTORIDAD')
+    def test_responsable_no_puede_saltar_a_aprobado_por_rectorado(self):
+        respuesta = self.cambiar(self.responsable, 'APROBADO_RECTORADO')
 
         self.assertEqual(respuesta.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('otra etapa', respuesta.data['error'])
         self.assertSinCambios()
 
     def test_gerente_no_puede_saltar_a_revision_gerencial_por_este_camino(self):
-        respuesta = self.cambiar(self.gerente, 'VALIDADO_GERENTE')
+        respuesta = self.cambiar(self.gerente, 'VALIDADO_DIRECCION')
         self.assertEqual(respuesta.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertSinCambios()
 
     def test_responsable_no_puede_marcarse_observado_por_el_gerente(self):
-        respuesta = self.cambiar(self.responsable, 'OBSERVADO_GERENTE')
+        respuesta = self.cambiar(self.responsable, 'OBSERVADO_DIRECCION')
         self.assertEqual(respuesta.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertSinCambios()
 

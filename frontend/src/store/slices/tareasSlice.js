@@ -228,11 +228,11 @@ export const devolverTareaConObservaciones = createAsyncThunk(
 )
 
 // Registrar remisión al Rectorado
-export const registrarRemisionAutoridadTarea = createAsyncThunk(
-  'tareas/registrarRemisionAutoridad',
+export const registrarRemisionRectoradoTarea = createAsyncThunk(
+  'tareas/registrarRemisionRectorado',
   async ({ tareaId, data }, { rejectWithValue }) => {
     try {
-      const response = await tareaService.registrarRemisionAutoridad(tareaId, data)
+      const response = await tareaService.registrarRemisionRectorado(tareaId, data)
       return response.data.tarea
     } catch (error) {
       return rejectWithValue(error.response?.data || error.message)
@@ -482,11 +482,11 @@ const tareasSlice = createSlice({
         state.error = action.payload
       })
       // Registrar remisión al Rectorado
-      .addCase(registrarRemisionAutoridadTarea.pending, (state) => {
+      .addCase(registrarRemisionRectoradoTarea.pending, (state) => {
         state.loading = true
         state.error = null
       })
-      .addCase(registrarRemisionAutoridadTarea.fulfilled, (state, action) => {
+      .addCase(registrarRemisionRectoradoTarea.fulfilled, (state, action) => {
         state.loading = false
         const index = state.list.findIndex((t) => t.id === action.payload.id)
         if (index !== -1) {
@@ -496,7 +496,7 @@ const tareasSlice = createSlice({
           state.current = action.payload
         }
       })
-      .addCase(registrarRemisionAutoridadTarea.rejected, (state, action) => {
+      .addCase(registrarRemisionRectoradoTarea.rejected, (state, action) => {
         state.loading = false
         state.error = action.payload
       })

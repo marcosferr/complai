@@ -16,17 +16,17 @@ const AvanzarEtapaButton = ({ tarea, onUpdate, className = '', variant = 'primar
     // Definir estados que permiten avanzar por etapa
     const estadosPermitidos = {
       'INICIO': ['EN_PROGRESO', 'REQUIERE_ATENCION', 'PENDIENTE'],
-      'REVISION_GERENCIAL': ['VALIDADO_GERENTE'],
-      'CONTROL_ANALISTA': ['PENDIENTE_VALIDACION_OFICIAL', 'EN_PROGRESO_ANALISTA'],
-      'CONTROL_OFICIAL': [], // No hay siguiente etapa
+      'REVISION_DIRECCION': ['VALIDADO_DIRECCION'],
+      'CONTROL_UOC': ['PENDIENTE_VALIDACION_ADMIN', 'EN_PROGRESO_UOC'],
+      'CONTROL_ADMINISTRADOR': [], // No hay siguiente etapa
     }
 
     // Verificar si el rol tiene permiso PARA ESA ETAPA ESPECÍFICA
     const rolesPermisosPorEtapa = {
-      'INICIO': ['RESPONSABLE', 'GERENTE', 'OFICIAL_COMPLIANCE'],
-      'REVISION_GERENCIAL': ['GERENTE', 'ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE'],
-      'CONTROL_ANALISTA': ['ANALISTA_COMPLIANCE', 'OFICIAL_COMPLIANCE'],
-      'CONTROL_OFICIAL': [],
+      'INICIO': ['RESPONSABLE', 'DIRECTOR', 'ADMINISTRADOR_CONTRATO'],
+      'REVISION_DIRECCION': ['DIRECTOR', 'ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO'],
+      'CONTROL_UOC': ['ANALISTA_UOC', 'ADMINISTRADOR_CONTRATO'],
+      'CONTROL_ADMINISTRADOR': [],
     }
 
     const tienePermisoEtapa = rolesPermisosPorEtapa[etapaActual]?.includes(role)
@@ -37,10 +37,10 @@ const AvanzarEtapaButton = ({ tarea, onUpdate, className = '', variant = 'primar
 
   const getSiguienteEtapa = () => {
     const etapas = {
-      'INICIO': { nombre: ETAPA_LABELS.REVISION_GERENCIAL, codigo: 'REVISION_GERENCIAL' },
-      'REVISION_GERENCIAL': { nombre: ETAPA_LABELS.CONTROL_ANALISTA, codigo: 'CONTROL_ANALISTA' },
-      'CONTROL_ANALISTA': { nombre: ETAPA_LABELS.CONTROL_OFICIAL, codigo: 'CONTROL_OFICIAL' },
-      'CONTROL_OFICIAL': null,
+      'INICIO': { nombre: ETAPA_LABELS.REVISION_DIRECCION, codigo: 'REVISION_DIRECCION' },
+      'REVISION_DIRECCION': { nombre: ETAPA_LABELS.CONTROL_UOC, codigo: 'CONTROL_UOC' },
+      'CONTROL_UOC': { nombre: ETAPA_LABELS.CONTROL_ADMINISTRADOR, codigo: 'CONTROL_ADMINISTRADOR' },
+      'CONTROL_ADMINISTRADOR': null,
     }
     return etapas[tarea?.etapa_actual]
   }

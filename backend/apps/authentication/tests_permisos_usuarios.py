@@ -36,7 +36,7 @@ class AdministracionDeUsuariosPermisosTest(APITestCase):
         self.victima = Usuario(
             username='gerente@uni.edu.py',
             email='gerente@uni.edu.py',
-            role='GERENTE',
+            role='DIRECTOR',
             area=self.area,
         )
         self.victima.set_password('Clave-Segura-456')
@@ -45,7 +45,7 @@ class AdministracionDeUsuariosPermisosTest(APITestCase):
         self.oficial = Usuario(
             username='oficial@uni.edu.py',
             email='oficial@uni.edu.py',
-            role='OFICIAL_COMPLIANCE',
+            role='ADMINISTRADOR_CONTRATO',
         )
         self.oficial.set_password('Clave-Segura-789')
         self.oficial.save()
@@ -59,7 +59,7 @@ class AdministracionDeUsuariosPermisosTest(APITestCase):
     def test_responsable_no_puede_ascenderse_a_si_mismo(self):
         self.client.force_authenticate(user=self.responsable)
 
-        respuesta = self.client.patch(self.url_propio, {'role': 'OFICIAL_COMPLIANCE'}, format='json')
+        respuesta = self.client.patch(self.url_propio, {'role': 'ADMINISTRADOR_CONTRATO'}, format='json')
 
         self.assertEqual(respuesta.status_code, status.HTTP_403_FORBIDDEN)
         self.responsable.refresh_from_db()
@@ -105,7 +105,7 @@ class AdministracionDeUsuariosPermisosTest(APITestCase):
                 'last_name': 'Sin Permiso',
                 'password': 'Clave-Segura-000',
                 'password_confirm': 'Clave-Segura-000',
-                'role': 'OFICIAL_COMPLIANCE',
+                'role': 'ADMINISTRADOR_CONTRATO',
                 'area': self.area.pk,
             },
             format='json',
@@ -121,11 +121,11 @@ class AdministracionDeUsuariosPermisosTest(APITestCase):
     def test_oficial_de_compliance_si_cambia_el_rol(self):
         self.client.force_authenticate(user=self.oficial)
 
-        respuesta = self.client.patch(self.url_propio, {'role': 'GERENTE'}, format='json')
+        respuesta = self.client.patch(self.url_propio, {'role': 'DIRECTOR'}, format='json')
 
         self.assertEqual(respuesta.status_code, status.HTTP_200_OK)
         self.responsable.refresh_from_db()
-        self.assertEqual(self.responsable.role, 'GERENTE')
+        self.assertEqual(self.responsable.role, 'DIRECTOR')
 
     def test_oficial_de_compliance_lista_usuarios(self):
         self.client.force_authenticate(user=self.oficial)
@@ -173,7 +173,7 @@ class SerializerCierraLosCamposDePrivilegioTest(APITestCase):
         oficial = Usuario(
             username='o2@uni.edu.py',
             email='o2@uni.edu.py',
-            role='OFICIAL_COMPLIANCE',
+            role='ADMINISTRADOR_CONTRATO',
         )
         oficial.set_password('Clave-Segura-789')
         oficial.save()

@@ -9,8 +9,8 @@ privilegiado).
 from rest_framework import permissions
 
 # Roles con potestad para administrar cuentas ajenas. Ojo: el modelo Usuario no
-# tiene un rol llamado ADMIN — el administrador funcional es OFICIAL_COMPLIANCE.
-ROLES_ADMINISTRADORES = ('OFICIAL_COMPLIANCE',)
+# tiene un rol llamado ADMIN — el administrador funcional es ADMINISTRADOR_CONTRATO.
+ROLES_ADMINISTRADORES = ('ADMINISTRADOR_CONTRATO',)
 
 
 def es_administrador(user) -> bool:

@@ -85,12 +85,12 @@ const Layout = ({ children }) => {
       : 'visualiza y gestiona las obligaciones del área'
 
     const allMenuItems = [
-      { path: '/', label: 'Dashboard', icon: 'dashboard', tooltip: 'Panel principal con resumen de actividades y métricas clave', roles: ['OFICIAL_COMPLIANCE', 'ANALISTA_COMPLIANCE', 'GERENTE', 'RESPONSABLE'] },
-      { path: '/tareas', label: 'Obligaciones', icon: 'assignment_turned_in', tooltip: tareasTooltip, roles: ['OFICIAL_COMPLIANCE', 'ANALISTA_COMPLIANCE', 'GERENTE', 'RESPONSABLE'] },
-      { path: '/documentos', label: 'Documentos de Compliance', icon: 'gavel', tooltip: 'Administra documentos legales y contratos de la organización', roles: ['OFICIAL_COMPLIANCE', 'ANALISTA_COMPLIANCE'] },
-      { path: '/auditorias', label: 'Compliance', icon: 'fact_check', tooltip: 'Programa y gestiona auditorías de cumplimiento', roles: ['OFICIAL_COMPLIANCE', 'ANALISTA_COMPLIANCE'] },
-      { path: '/calendario', label: 'Calendario', icon: 'calendar_today', tooltip: 'Visualiza eventos y fechas importantes relacionadas con el cumplimiento', roles: ['OFICIAL_COMPLIANCE', 'ANALISTA_COMPLIANCE', 'GERENTE', 'RESPONSABLE'] },
-      { path: '/notificaciones', label: 'Notificaciones', icon: 'notifications', tooltip: 'Revisa alertas y notificaciones del sistema de cumplimiento', roles: ['OFICIAL_COMPLIANCE', 'ANALISTA_COMPLIANCE', 'GERENTE', 'RESPONSABLE'] },
+      { path: '/', label: 'Dashboard', icon: 'dashboard', tooltip: 'Panel principal con resumen de actividades y métricas clave', roles: ['ADMINISTRADOR_CONTRATO', 'ANALISTA_UOC', 'DIRECTOR', 'RESPONSABLE'] },
+      { path: '/tareas', label: 'Obligaciones', icon: 'assignment_turned_in', tooltip: tareasTooltip, roles: ['ADMINISTRADOR_CONTRATO', 'ANALISTA_UOC', 'DIRECTOR', 'RESPONSABLE'] },
+      { path: '/documentos', label: 'Documentos de Compliance', icon: 'gavel', tooltip: 'Administra documentos legales y contratos de la organización', roles: ['ADMINISTRADOR_CONTRATO', 'ANALISTA_UOC'] },
+      { path: '/auditorias', label: 'Compliance', icon: 'fact_check', tooltip: 'Programa y gestiona auditorías de cumplimiento', roles: ['ADMINISTRADOR_CONTRATO', 'ANALISTA_UOC'] },
+      { path: '/calendario', label: 'Calendario', icon: 'calendar_today', tooltip: 'Visualiza eventos y fechas importantes relacionadas con el cumplimiento', roles: ['ADMINISTRADOR_CONTRATO', 'ANALISTA_UOC', 'DIRECTOR', 'RESPONSABLE'] },
+      { path: '/notificaciones', label: 'Notificaciones', icon: 'notifications', tooltip: 'Revisa alertas y notificaciones del sistema de cumplimiento', roles: ['ADMINISTRADOR_CONTRATO', 'ANALISTA_UOC', 'DIRECTOR', 'RESPONSABLE'] },
     ]
 
     // Filter by user role
@@ -171,7 +171,7 @@ const Layout = ({ children }) => {
         </nav>
 
         {/* Solo Administrador/a de Contrato y UOC (no Dirección) */}
-        {(user?.role === 'OFICIAL_COMPLIANCE' || user?.role === 'ANALISTA_COMPLIANCE') && (
+        {(user?.role === 'ADMINISTRADOR_CONTRATO' || user?.role === 'ANALISTA_UOC') && (
           <div className="px-4 py-4 space-y-2 border-t border-border-light dark:border-border-dark">
             <Link
               to="/usuarios"

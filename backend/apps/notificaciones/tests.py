@@ -26,7 +26,7 @@ class NotificacionConfiguracionModelTest(TestCase):
             password='testpass123',
             first_name='Test',
             last_name='User',
-            role='OFICIAL_COMPLIANCE'
+            role='ADMINISTRADOR_CONTRATO'
         )
         
         self.area = Area.objects.create(
@@ -95,7 +95,7 @@ class NotificacionConfiguracionSerializerTest(TestCase):
             password='testpass123',
             first_name='Test',
             last_name='User',
-            role='OFICIAL_COMPLIANCE'
+            role='ADMINISTRADOR_CONTRATO'
         )
         
         self.area = Area.objects.create(
@@ -211,7 +211,7 @@ class NotificacionConfiguracionAPITest(APITestCase):
             password='testpass123',
             first_name='Test',
             last_name='User',
-            role='OFICIAL_COMPLIANCE'
+            role='ADMINISTRADOR_CONTRATO'
         )
         
         self.area = Area.objects.create(
@@ -290,7 +290,7 @@ class ComentarioNotificationTest(TestCase):
             password='test123',
             first_name='Oficial',
             last_name='Test',
-            role='OFICIAL_COMPLIANCE'
+            role='ADMINISTRADOR_CONTRATO'
         )
         
         self.analista = Usuario.objects.create_user(
@@ -298,7 +298,7 @@ class ComentarioNotificationTest(TestCase):
             password='test123',
             first_name='Analista',
             last_name='Test',
-            role='ANALISTA_COMPLIANCE'
+            role='ANALISTA_UOC'
         )
         
         self.gerente = Usuario.objects.create_user(
@@ -306,7 +306,7 @@ class ComentarioNotificationTest(TestCase):
             password='test123',
             first_name='Gerente',
             last_name='Test',
-            role='GERENTE',
+            role='DIRECTOR',
             area=self.area
         )
         
@@ -370,7 +370,7 @@ class ComentarioNotificationTest(TestCase):
             password='test123',
             first_name='Gerente2',
             last_name='Test',
-            role='GERENTE',
+            role='DIRECTOR',
             area=area2
         )
         
@@ -408,7 +408,7 @@ class ArchivoNotificationTest(TestCase):
             password='test123',
             first_name='Oficial',
             last_name='Test',
-            role='OFICIAL_COMPLIANCE'
+            role='ADMINISTRADOR_CONTRATO'
         )
         
         self.responsable = Usuario.objects.create_user(
@@ -515,7 +515,7 @@ class NotificacionSerializerTest(TestCase):
             password='test123',
             first_name='Oficial',
             last_name='Test',
-            role='OFICIAL_COMPLIANCE'
+            role='ADMINISTRADOR_CONTRATO'
         )
         
         self.tarea = TareaCumplimiento.objects.create(
