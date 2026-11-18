@@ -271,3 +271,6 @@ backend/media
 *.sql.gz
 backups/
 backend/backup.dump
+
+.env.testing
+backend/.env.testing
